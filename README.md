@@ -1,20 +1,46 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# NormaStat
 
-# Run and deploy your AI Studio app
+Entorno interactivo para el análisis y aprendizaje de pruebas de normalidad estadística. Diseñado para estudiantes y profesionales que necesitan evaluar rápidamente si un conjunto de datos sigue una distribución normal.
 
-This contains everything you need to run your app locally.
+**→ https://normastat.vercel.app**
 
-View your app in AI Studio: https://ai.studio/apps/f255ed07-7da2-4407-bb7e-8f892e0aaf5b
+## Funcionalidades
 
-## Run Locally
+- Tres pruebas de normalidad: Shapiro-Francia, Kolmogorov-Smirnov (Lilliefors) y Jarque-Bera
+- Histograma interactivo con superposición de curva normal teórica y KDE empírica (activables por el usuario)
+- Estadísticos descriptivos: media, desviación estándar, mediana, asimetría, curtosis
+- Dos niveles de profundidad: Pri (principiante) y Pro (profesional)
+- Asistente IA integrado (Gemini API) para resolver dudas estadísticas
+- Exportación a CSV (reporte completo)
+- Exportación a HTML autónomo (funciona sin internet)
+- Temas claro y oscuro
+- Carga de datos por copiar-pegar o archivo CSV/TXT
+- Datasets de ejemplo precargados
 
-**Prerequisites:**  Node.js
+## Stack Tecnológico
 
+- **Frontend:** React 18 + TypeScript + Vite + Tailwind CSS
+- **Backend (local):** Node.js + Express
+- **Serverless (producción):** Vercel Functions
+- **IA:** Google Gemini API (con fallback automático entre modelos)
+- **Gráficos:** SVG nativo con Recharts
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Uso Online
+
+Los estudiantes solo necesitan abrir el enlace en cualquier navegador moderno. El asistente IA funciona sin configuración adicional.
+
+## Desarrollo Local
+
+```bash
+npm install
+# Crear .env.local con GEMINI_API_KEY=tu_clave
+npm run dev
+```
+
+## Despliegue
+
+El proyecto está configurado para Vercel. Cualquier push a `master` en GitHub dispara un deploy automático:
+
+```bash
+git push origin master
+```

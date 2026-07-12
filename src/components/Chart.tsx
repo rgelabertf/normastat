@@ -21,8 +21,8 @@ export const Chart: React.FC<ChartProps> = ({
   binsCount,
   setBinsCount,
 }) => {
-  const [showNormalCurve, setShowNormalCurve] = useState(true);
-  const [showKDECurve, setShowKDECurve] = useState(true);
+  const [showNormalCurve, setShowNormalCurve] = useState(false);
+  const [showKDECurve, setShowKDECurve] = useState(false);
   const [showHistogram, setShowHistogram] = useState(true);
   const [hoveredBin, setHoveredBin] = useState<Bin | null>(null);
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);

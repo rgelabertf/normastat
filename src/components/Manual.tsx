@@ -206,6 +206,37 @@ export const Manual: React.FC = () => {
         </div>
       </section>
 
+      {/* Despliegue para el Docente */}
+      <section className="bg-gradient-to-r from-emerald-50 to-zinc-50 dark:from-emerald-950/10 dark:to-[#0D1117] border border-emerald-200 dark:border-emerald-900/20 rounded-xl p-6">
+        <h3 className="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">
+          <Download className="w-5 h-5 text-emerald-500" />
+          Despliegue e Implementación para el Docente
+        </h3>
+        <p className="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed mb-4">
+          NormaStat está disponible online sin necesidad de instalación. Comparte el siguiente enlace con tus estudiantes para que accedan desde cualquier navegador:
+        </p>
+        <div className="bg-white dark:bg-[#161B22] border border-emerald-200 dark:border-emerald-900/30 rounded-lg p-4 mb-4 font-mono text-sm text-center text-emerald-700 dark:text-emerald-400 select-all">
+          https://normastat.vercel.app
+        </div>
+        <div className="grid md:grid-cols-3 gap-3 text-xs">
+          <div className="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span className="text-zinc-600 dark:text-gray-300">Sin instalación &mdash; solo un navegador</span>
+          </div>
+          <div className="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span className="text-zinc-600 dark:text-gray-300">Asistente IA funcional sin API key del estudiante</span>
+          </div>
+          <div className="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span className="text-zinc-600 dark:text-gray-300">Exportación HTML offline disponible</span>
+          </div>
+        </div>
+        <p className="text-[10px] text-zinc-400 dark:text-gray-500 mt-3 leading-relaxed">
+          <strong>Nota técnica:</strong> El chat IA utiliza la API de Gemini a través de un proxy serverless en Vercel. Los estudiantes no necesitan configurar ninguna clave &mdash; la herramienta funciona directamente al abrir el enlace.
+        </p>
+      </section>
+
       {/* Uso Sin Conexión */}
       <section className="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-200 dark:border-[#2D333D] rounded-xl p-6">
         <h3 className="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">

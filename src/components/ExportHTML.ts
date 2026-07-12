@@ -1,0 +1,1109 @@
+export function generateStandaloneHTML(): string {
+  return `<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NormaStat - Evaluador de Normalidad de Datos</title>
+  <!-- Tailwind CSS v3 Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            zinc: {
+              850: '#202024'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    /* Hide scrollbars but keep functionality */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e4e4e7;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 dark:bg-[#0F1115] dark:text-zinc-50 min-h-screen transition-colors duration-200">
+
+  <!-- Main Navigation Header -->
+  <header class="border-b border-zinc-200 dark:border-[#2D333D] bg-white/80 dark:bg-[#161B22]/80 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md shadow-blue-600/10">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0h.008v.008H17.25V19.5m-1.218-3A19.5 19.5 0 0 0 12 15.75c-1.31 0-2.585.129-3.818.375L8 19.5" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-zinc-900 dark:text-white tracking-tight">NormaStat</h1>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-450 font-medium">Evaluador de Normalidad Autónomo</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Tab Navigation Buttons -->
+        <div class="bg-zinc-100 dark:bg-[#21262D] p-0.5 rounded-lg flex items-center text-xs">
+          <button id="tab-analisis-btn" onclick="switchTab('analisis')" class="px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition">
+            Análisis
+          </button>
+          <button id="tab-manual-btn" onclick="switchTab('manual')" class="px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition">
+            Manual de Uso
+          </button>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button onclick="toggleDarkMode()" class="p-2 text-zinc-500 dark:text-gray-400 hover:bg-zinc-100 dark:hover:bg-[#21262D] rounded-lg transition" title="Cambiar Tema">
+          <svg id="sun-icon" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21m8.96-8.96h-2.25M4.14 12H1.89m17.15-6.96-1.59 1.59M6.92 17.08l-1.59 1.59m12.75 0-1.59-1.59M6.92 6.92 5.33 5.33M12 7.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z" />
+          </svg>
+          <svg id="moon-icon" class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- TAB 1: ANALISIS -->
+    <div id="tab-analisis" class="space-y-8">
+      
+      <!-- Top banner info -->
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] p-6 rounded-2xl shadow-sm">
+        <div>
+          <h2 class="text-xl font-bold text-zinc-950 dark:text-white">Carga tus Datos Estadísticos</h2>
+          <p class="text-xs text-zinc-500 dark:text-gray-400 mt-1">Sube un archivo CSV/TXT, copia y pega directamente, o ensaya con nuestros datasets de muestra.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+          <span class="text-xs font-semibold text-zinc-500 dark:text-gray-400">Ejecución 100% Local / Sin Servidor</span>
+        </div>
+      </div>
+
+      <!-- Main Bento Grid -->
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Column: Inputs (4 cols) -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Sample datasets picker -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <h3 class="text-sm font-semibold text-zinc-800 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
+              Conjuntos de Datos de Prueba
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+              <button onclick="loadSampleDataset(0)" class="text-left p-3 rounded-lg border border-zinc-200 dark:border-[#30363D] hover:bg-zinc-50 dark:hover:bg-[#21262D] transition cursor-pointer">
+                <span class="block text-xs font-bold text-zinc-800 dark:text-white">Estatura de Estudiantes</span>
+                <span class="block text-[10px] text-zinc-500 dark:text-gray-450 mt-1">Normal teórica perfecto (N=150)</span>
+              </button>
+              <button onclick="loadSampleDataset(1)" class="text-left p-3 rounded-lg border border-zinc-200 dark:border-[#30363D] hover:bg-zinc-50 dark:hover:bg-[#21262D] transition cursor-pointer">
+                <span class="block text-xs font-bold text-zinc-800 dark:text-white">Tiempos de Reacción</span>
+                <span class="block text-[10px] text-zinc-500 dark:text-gray-450 mt-1">Asimetría positiva notable (N=80)</span>
+              </button>
+              <button onclick="loadSampleDataset(2)" class="text-left p-3 rounded-lg border border-zinc-200 dark:border-[#30363D] hover:bg-zinc-50 dark:hover:bg-[#21262D] transition cursor-pointer">
+                <span class="block text-xs font-bold text-zinc-800 dark:text-white">Resultados Examen</span>
+                <span class="block text-[10px] text-zinc-500 dark:text-gray-450 mt-1">Distribución Bimodal clara (N=100)</span>
+              </button>
+              <button onclick="loadSampleDataset(3)" class="text-left p-3 rounded-lg border border-zinc-200 dark:border-[#30363D] hover:bg-zinc-50 dark:hover:bg-[#21262D] transition cursor-pointer">
+                <span class="block text-xs font-bold text-zinc-800 dark:text-white">Resultados Dado</span>
+                <span class="block text-[10px] text-zinc-500 dark:text-gray-450 mt-1">Distribución Uniforme, No Normal (N=120)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Drag and Drop / File uploader -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <h3 class="text-sm font-semibold text-zinc-800 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" /></svg>
+              Subir Archivo CSV o TXT
+            </h3>
+            
+            <div id="dropzone" ondragover="event.preventDefault(); this.classList.add('border-blue-500');" ondragleave="this.classList.remove('border-blue-500');" ondrop="handleDrop(event)" class="border-2 border-dashed border-zinc-200 dark:border-[#30363D] rounded-xl p-6 text-center hover:border-blue-500 transition cursor-pointer relative">
+              <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".csv,.txt,.tsv" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+              <svg class="w-8 h-8 text-zinc-400 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z" /></svg>
+              <p class="text-xs font-semibold text-zinc-700 dark:text-zinc-300">Arrastra tu archivo aquí o haz clic para buscar</p>
+              <p class="text-[10px] text-zinc-500 mt-1">Soporta archivos .csv, .tsv, .txt delimitados por coma o tabulador</p>
+            </div>
+
+            <!-- Column selector (initially hidden) -->
+            <div id="column-selector-container" class="space-y-2 hidden">
+              <label class="block text-xs font-bold text-zinc-500 dark:text-gray-400 uppercase tracking-wider">Columna a Analizar:</label>
+              <select id="column-selector" onchange="selectColumn()" class="w-full bg-zinc-50 dark:bg-[#0D1117] border border-zinc-200 dark:border-[#30363D] rounded-lg py-2 px-3 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-800 dark:text-white"></select>
+            </div>
+          </div>
+
+          <!-- Manual copy paste box -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <h3 class="text-sm font-semibold text-zinc-800 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0A2.25 2.25 0 0 1 13.5 5.25h-3a2.25 2.25 0 0 1-2.166-1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.346.102.637.31.806.619l.971 1.748c.15.27.18.59.083.88l-.427 1.282M10.5 22.05H6.75A2.25 2.25 0 0 1 4.5 19.8V6a2.25 2.25 0 0 1 2.25-2.25h1.5m9 16.29a3 3 0 1 1-6 0c0-1.657 1.343-3 3-3s3 1.343 3 3ZM18.75 15.75h.007v.008h-.007V15.75Z" /></svg>
+              Copiar y Pegar Datos Directamente
+            </h3>
+            <textarea id="paste-area" rows="6" placeholder="Pega aquí tu columna numérica desde Excel, Google Sheets, SPSS o archivo de texto. Admite números separados por comas, espacios o saltos de línea..." class="w-full bg-zinc-50 dark:bg-[#0D1117] border border-zinc-200 dark:border-[#30363D] rounded-lg p-3 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-blue-500 text-zinc-850 dark:text-white"></textarea>
+            <button onclick="processPastedData()" class="w-full bg-zinc-900 dark:bg-white text-white dark:text-[#0F1115] py-2 rounded-lg text-xs font-bold hover:bg-zinc-800 dark:hover:bg-gray-100 transition cursor-pointer">
+              Procesar Datos Copiados
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Results & Graphs (7 cols) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Test results cards row -->
+          <div class="grid md:grid-cols-3 gap-4" id="test-cards-container">
+            <!-- Cards will be dynamically injected here -->
+          </div>
+
+          <!-- Dynamic SVG Chart Card -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-6 shadow-sm space-y-6">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 class="text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v5.25c0 .621-.504 1.125-1.125 1.125h-2.25A1.125 1.125 0 0 1 3 18.375v-5.25ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125v-9.75ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v14.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
+                  Distribución Gráfica y Densidades
+                </h3>
+                <p class="text-[10px] text-zinc-500 dark:text-gray-450 mt-1">Histograma, Curva Teórica Normal y Densidad Empírica (KDE).</p>
+              </div>
+              <div class="flex items-center gap-2 text-[10px]">
+                <button onclick="toggleCurve('hist')" id="toggle-hist-btn" class="px-2 py-1 rounded bg-zinc-100 dark:bg-[#21262D] text-zinc-800 dark:text-white border border-zinc-200 dark:border-[#30363D] cursor-pointer">Histograma</button>
+                <button onclick="toggleCurve('normal')" id="toggle-normal-btn" class="px-2 py-1 rounded bg-orange-50 dark:bg-orange-950/20 text-orange-750 dark:text-orange-400 border border-orange-300 dark:border-orange-900/30 font-semibold cursor-pointer">Normal Teórica</button>
+                <div class="flex items-center gap-1 relative group">
+                  <button onclick="toggleCurve('kde')" id="toggle-kde-btn" class="px-2 py-1 rounded bg-blue-50 dark:bg-blue-950/20 text-blue-750 dark:text-blue-400 border border-blue-300 dark:border-blue-900/30 font-semibold cursor-pointer mr-0.5">KDE Empírica</button>
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal right-0 translate-x-0">
+                    <div class="absolute top-full right-4 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">KDE Empírica (Kernel Density Estimation)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">Método no paramétrico para estimar la función de densidad de probabilidad de una variable de forma suave y continua.</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Suaviza frecuencias con un kernel gaussiano en cada dato.</li>
+                      <li>• Evita la arbitrariedad al elegir intervalos del histograma.</li>
+                      <li>• Ancho de banda optimizado automáticamente por la regla de Silverman.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SVG Container wrapper -->
+            <div class="relative w-full overflow-hidden" id="chart-wrapper">
+              <!-- SVG is dynamically injected here -->
+            </div>
+
+            <!-- Bins Slider -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-100 dark:border-[#30363D]">
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-zinc-500 dark:text-gray-450 uppercase tracking-wider">Intervalos (Bins):</span>
+                <span id="bins-count-badge" class="px-2 py-0.5 text-xs font-mono bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 font-bold rounded">15</span>
+              </div>
+              <div class="w-full sm:max-w-xs flex items-center gap-3">
+                <span class="text-[10px] font-mono text-zinc-400">5</span>
+                <input type="range" id="bins-slider" min="5" max="50" value="15" oninput="updateBinsCount(this.value)" class="w-full h-1 bg-zinc-200 dark:bg-[#30363D] rounded-lg appearance-none cursor-pointer accent-blue-600">
+                <span class="text-[10px] font-mono text-zinc-400">50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Descriptive statistics table -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <h3 class="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" /></svg>
+              Estadísticos Descriptivos Completos
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-table-grid">
+              <!-- Grid values injected dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: MANUAL -->
+    <div id="tab-manual" class="hidden space-y-8 max-w-4xl mx-auto py-4">
+      <!-- Section copied from our Manual.tsx for complete mirroring -->
+      <div class="border-b border-zinc-200 dark:border-[#2D333D] pb-6">
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+          Manual de Operación y Fundamentos Estadísticos
+        </h2>
+        <p class="text-zinc-500 dark:text-gray-400 mt-2 text-sm">
+          Guía técnica para interpretar los resultados de normalidad de forma rigurosa.
+        </p>
+      </div>
+
+      <div class="bg-blue-50/50 dark:bg-blue-950/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-6">
+        <h3 class="text-base font-bold text-blue-900 dark:text-blue-400 flex items-center gap-2 mb-3">
+          La Regla de Oro: Interpretación del Valor de p (p-value)
+        </h3>
+        <p class="text-sm text-zinc-700 dark:text-gray-300 leading-relaxed mb-4">
+          En todas las pruebas de normalidad planteadas, contrastamos dos hipótesis fundamentales:
+        </p>
+        
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg p-4">
+            <span class="text-xs font-bold px-2 py-0.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 rounded">
+              Hipótesis Nula (H₀)
+            </span>
+            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
+              Los datos provienen de una población distribuida normalmente.
+            </p>
+          </div>
+          
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg p-4">
+            <span class="text-xs font-bold px-2 py-0.5 bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 rounded">
+              Hipótesis Alternativa (H₁)
+            </span>
+            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
+              Los datos NO provienen de una población distribuida normalmente.
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
+            <strong>Si p &gt; 0.05:</strong> No se rechaza la hipótesis nula. El comportamiento es normal. Se pueden usar pruebas paramétricas.
+          </p>
+          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
+            <strong>Si p ≤ 0.05:</strong> Se rechaza la hipótesis nula. El comportamiento difiere de la distribución normal. Se sugiere usar estadística no paramétrica.
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h3 class="text-lg font-bold">Pruebas estadísticas ejecutadas</h3>
+        <div class="space-y-4 text-xs text-zinc-600 dark:text-gray-400">
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Shapiro-Francia (Variante Shapiro-Wilk)</h4>
+            <p class="mt-1">Excelente poder estadístico para muestras de hasta 5,000 datos. Mide la correlación lineal entre datos ordenados reales y esperados de una curva de campana teórica.</p>
+          </div>
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Kolmogorov-Smirnov</h4>
+            <p class="mt-1">Evalúa la máxima desviación vertical entre la curva de distribución empírica acumulada (ECDF) y la curva normal acumulada esperada.</p>
+          </div>
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Jarque-Bera</h4>
+            <p class="mt-1">Basado en momentos matemáticos avanzados de Asimetría (Sesgo) y Curtosis para verificar el balance y el apuntamiento de la distribución.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="border-t border-zinc-200 dark:border-[#2D333D] bg-white dark:bg-[#161B22]/40 mt-16 py-8">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-zinc-500 dark:text-gray-500">
+      <p>© 2026 Rolando Gelabert Fernández — Universidad Autónoma del Carmen</p>
+      <p class="mt-1">Desarrollada por Rolando Gelabert · Licencia MIT</p>
+      <p class="mt-1">Todos los cálculos estadísticos se resuelven en tu máquina a través de algoritmos analíticos puros en JavaScript.</p>
+    </div>
+  </footer>
+
+  <!-- CORE SCRIPT CONSTATING ALL STATS MATH & INTERACTIVE CODE -->
+  <script>
+    // --- SAMPLE DATASETS ---
+    const sampleDatasets = [
+      {
+        name: "Estatura de Estudiantes (Normal)",
+        data: [
+          173.1, 168.4, 169.5, 175.2, 165.1, 172.3, 178.6, 160.2, 171.1, 166.7,
+          174.4, 170.1, 179.3, 164.8, 172.9, 167.2, 176.5, 169.1, 161.4, 175.8,
+          170.4, 173.8, 163.5, 168.1, 174.9, 172.1, 167.9, 166.2, 177.1, 171.5,
+          169.4, 165.7, 173.4, 176.2, 162.8, 170.8, 168.9, 178.1, 171.9, 164.1,
+          175.4, 167.5, 170.2, 174.1, 169.8, 166.4, 172.7, 173.6, 161.9, 171.3,
+          168.3, 177.4, 165.9, 170.5, 174.7, 169.2, 164.5, 173.9, 171.1, 176.1,
+          166.9, 172.5, 169.7, 163.1, 175.1, 170.9, 168.6, 179.1, 172.2, 165.4,
+          174.6, 167.8, 171.4, 173.3, 169.1, 166.1, 172.8, 174.2, 162.1, 170.7,
+          168.5, 177.9, 165.2, 171.6, 175.3, 169.5, 163.8, 173.2, 171.8, 176.8,
+          167.1, 172.4, 169.9, 164.4, 174.8, 170.3, 168.2, 178.4, 172.6, 165.8,
+          173.7, 167.3, 171.2, 174.5, 169.3, 166.5, 172.9, 173.5, 162.5, 171.7,
+          168.7, 177.5, 165.5, 170.6, 175.6, 169.6, 164.2, 173.1, 171.3, 176.3,
+          167.4, 172.1, 169.1, 163.6, 174.3, 170.5, 168.1, 178.9, 172.4, 165.2,
+          173.5, 167.9, 171.8, 174.1, 169.4, 166.8, 172.6, 173.9, 162.9, 171.2,
+          168.2, 177.1, 165.9, 170.2, 175.1, 169.9, 164.8, 173.3, 171.5, 176.2
+        ]
+      },
+      {
+        name: "Tiempos de Reacción (Asimétrica Positiva)",
+        data: [
+          185, 192, 198, 201, 205, 210, 212, 215, 218, 220,
+          222, 225, 228, 230, 232, 235, 238, 240, 242, 245,
+          248, 250, 252, 255, 258, 260, 263, 265, 268, 272,
+          275, 278, 282, 285, 288, 292, 295, 300, 304, 308,
+          312, 316, 321, 326, 331, 336, 342, 348, 354, 361,
+          368, 376, 384, 393, 402, 412, 423, 435, 448, 462,
+          478, 495, 514, 535, 558, 584, 613, 646, 684, 728,
+          780, 842, 918, 1012, 1134, 1298, 1524, 1850, 2340, 3120
+        ]
+      },
+      {
+        name: "Calificaciones de Examen (Bimodal)",
+        data: [
+          45.2, 48.1, 41.5, 52.3, 49.8, 46.4, 43.1, 55.2, 47.3, 50.1,
+          51.4, 44.2, 48.9, 53.5, 46.1, 49.3, 52.8, 42.9, 50.6, 47.8,
+          85.1, 88.4, 82.5, 91.3, 89.9, 86.2, 83.4, 94.2, 87.1, 90.3,
+          91.5, 84.4, 88.9, 93.1, 86.5, 89.7, 92.4, 82.1, 90.8, 87.5,
+          43.4, 47.2, 42.1, 54.1, 48.8, 45.3, 44.5, 53.2, 46.7, 51.1,
+          84.1, 87.9, 81.2, 92.3, 88.2, 85.1, 82.9, 93.5, 86.8, 91.4,
+          46.2, 51.5, 43.8, 50.4, 47.9, 48.5, 42.6, 52.1, 49.4, 44.9,
+          85.8, 89.2, 83.1, 90.5, 87.4, 86.9, 81.8, 92.1, 88.7, 85.2,
+          48.3, 41.9, 49.5, 50.8, 45.8, 46.1, 43.5, 51.4, 47.2, 53.1,
+          83.7, 88.5, 82.2, 89.1, 86.4, 87.2, 84.1, 91.6, 88.1, 89.8
+        ]
+      },
+      {
+        name: "Resultados de Dado (Uniforme)",
+        data: [
+          1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+          2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+          3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+          4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+          5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+          6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+        ]
+      }
+    ];
+
+    // State Variables
+    let currentData = [...sampleDatasets[0].data];
+    let sortedData = [...currentData].sort((a, b) => a - b);
+    let binsCount = 15;
+    let parsedColumns = {}; // Key: colName, Value: array of numbers
+    let selectedColumnName = null;
+
+    // View toggles
+    let showHistogram = true;
+    let showNormalCurve = true;
+    let showKDECurve = true;
+
+    // --- ANALYTICAL STATS ALGORITHMS ---
+    function stdNormalCDF(z) {
+      const p = 0.2316419;
+      const b1 = 0.319381530;
+      const b2 = -0.356563782;
+      const b3 = 1.781477937;
+      const b4 = -1.821255978;
+      const b5 = 1.330274429;
+      const absZ = Math.abs(z);
+      const t = 1.0 / (1.0 + p * absZ);
+      const pdf = Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+      let cdf = 1.0 - pdf * (b1 * t + b2 * t * t + b3 * Math.pow(t, 3) + b4 * Math.pow(t, 4) + b5 * Math.pow(t, 5));
+      if (z < 0) cdf = 1.0 - cdf;
+      return cdf;
+    }
+
+    function inverseNormalCDF(p) {
+      if (p <= 0) return -5.0;
+      if (p >= 1) return 5.0;
+      const c = [2.515517, 0.802853, 0.010328];
+      const d = [1.432788, 0.189269, 0.001308];
+      const t = Math.sqrt(-2.0 * Math.log(p < 0.5 ? p : 1.0 - p));
+      const num = c[0] + c[1] * t + c[2] * t * t;
+      const den = 1.0 + d[0] * t + d[1] * t * t + d[2] * t * t * t;
+      const z = t - num / den;
+      return p < 0.5 ? -z : z;
+    }
+
+    function ksPValue(d, n) {
+      const lambda = (Math.sqrt(n) + 0.12 + 0.11 / Math.sqrt(n)) * d;
+      if (lambda < 0.2) return 1.0;
+      if (lambda > 3.0) return 0.0;
+      let sum = 0;
+      for (let k = 1; k <= 50; k++) {
+        const term = Math.pow(-1, k - 1) * Math.exp(-2 * k * k * lambda * lambda);
+        sum += term;
+        if (Math.abs(term) < 1e-12) break;
+      }
+      return Math.min(1.0, Math.max(0.0, 2 * sum));
+    }
+
+    function getSummaryStatistics(data) {
+      const n = data.length;
+      if (n === 0) return null;
+      const sorted = [...data].sort((a, b) => a - b);
+      const min = sorted[0];
+      const max = sorted[n - 1];
+      const sum = data.reduce((a, b) => a + b, 0);
+      const mean = sum / n;
+
+      let median = n % 2 === 0 ? (sorted[n / 2 - 1] + sorted[n / 2]) / 2 : sorted[Math.floor(n / 2)];
+
+      let sumSqDiff = 0, sumCubeDiff = 0, sumQuadDiff = 0;
+      for (let i = 0; i < n; i++) {
+        const diff = data[i] - mean;
+        const diff2 = diff * diff;
+        sumSqDiff += diff2;
+        sumCubeDiff += diff2 * diff;
+        sumQuadDiff += diff2 * diff2;
+      }
+
+      const variance = n > 1 ? sumSqDiff / (n - 1) : 0;
+      const sd = Math.sqrt(variance);
+
+      const m2 = sumSqDiff / n;
+      const m3 = sumCubeDiff / n;
+      const m4 = sumQuadDiff / n;
+
+      let skewness = 0, kurtosis = 3;
+      if (m2 > 0) {
+        skewness = m3 / Math.pow(m2, 1.5);
+        kurtosis = m4 / Math.pow(m2, 2);
+      }
+
+      return { n, mean, sd, median, min, max, skewness, kurtosis, excessKurtosis: kurtosis - 3, variance };
+    }
+
+    function runShapiroFrancia(sorted) {
+      const n = sorted.length;
+      const mean = sorted.reduce((a, b) => a + b, 0) / n;
+      let ss = sorted.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0);
+
+      if (ss === 0) {
+        return { value: 0, p: 0, pass: false, desc: "Datos constantes." };
+      }
+      if (n < 5) {
+        return { value: 1.0, p: 1.0, pass: true, desc: "Muestra muy pequeña (N < 5)" };
+      }
+
+      let sumM2 = 0;
+      const m = [];
+      for (let i = 0; i < n; i++) {
+        const p = (i + 1 - 0.375) / (n + 0.25);
+        m[i] = inverseNormalCDF(p);
+        sumM2 += m[i] * m[i];
+      }
+      const sqrtSumM2 = Math.sqrt(sumM2);
+
+      let sumAX = 0;
+      for (let i = 0; i < n; i++) {
+        const a_i = m[i] / sqrtSumM2;
+        sumAX += a_i * sorted[i];
+      }
+
+      const wPrime = Math.min(0.9999999, Math.max(0.0000001, Math.pow(sumAX, 2) / ss));
+      const lnN = Math.log(n);
+      const mean_v = -1.2725 + 1.0521 * (lnN - Math.log(4));
+      const sigma_v = Math.exp(1.5677 - 0.4826 * lnN);
+      const v = Math.log(1.0 - wPrime);
+      const z = (v - mean_v) / sigma_v;
+      const p = stdNormalCDF(-z);
+
+      return {
+        value: wPrime,
+        p: p,
+        pass: p > 0.05,
+        desc: p > 0.05 ? "No se detectan desviaciones (p > 0.05). Distribución normal." : "Se detecta desviación significativa (p ≤ 0.05). Distribución NO normal."
+      };
+    }
+
+    function runKolmogorovSmirnov(sorted, mean, sd) {
+      const n = sorted.length;
+      if (n < 3) return { value: 0, p: 1, pass: true, desc: "Muestra insuficiente." };
+      if (sd === 0) return { value: 1, p: 0, pass: false, desc: "Desviación estándar cero." };
+
+      let maxD = 0;
+      for (let i = 0; i < n; i++) {
+        const z = (sorted[i] - mean) / sd;
+        const cdfT = stdNormalCDF(z);
+        const d1 = Math.abs((i + 1) / n - cdfT);
+        const d2 = Math.abs(cdfT - i / n);
+        if (d1 > maxD) maxD = d1;
+        if (d2 > maxD) maxD = d2;
+      }
+
+      const p = ksPValue(maxD, n);
+      return {
+        value: maxD,
+        p: p,
+        pass: p > 0.05,
+        desc: p > 0.05 ? "No se rechaza la simetría acumulada normal (p > 0.05)." : "Se rechaza ajuste acumulado normal (p ≤ 0.05)."
+      };
+    }
+
+    function runJarqueBera(sorted) {
+      const n = sorted.length;
+      if (n < 4) return { value: 0, p: 1, pass: true, desc: "Muestra insuficiente." };
+      const stats = getSummaryStatistics(sorted);
+      if (!stats || stats.variance === 0) return { value: 0, p: 0, pass: false, desc: "Sin variabilidad." };
+
+      const jb = (n / 6) * (Math.pow(stats.skewness, 2) + Math.pow(stats.excessKurtosis, 2) / 4);
+      const p = Math.exp(-jb / 2);
+
+      return {
+        value: jb,
+        p: p,
+        pass: p > 0.05,
+        desc: p > 0.05 ? "Asimetría y Curtosis balanceadas (p > 0.05)." : "Asimetría o Curtosis fuera de rango (p ≤ 0.05)."
+      };
+    }
+
+    // Bandwidth rule of thumb for KDE
+    function calculateIQR(sorted) {
+      const n = sorted.length;
+      if (n < 4) return 0;
+      const getP = (p) => {
+        const idx = (n - 1) * p;
+        const base = Math.floor(idx);
+        const rest = idx - base;
+        return base + 1 < n ? sorted[base] + rest * (sorted[base + 1] - sorted[base]) : sorted[base];
+      };
+      return getP(0.75) - getP(0.25);
+    }
+
+    function calculateBandwidth(sorted, sd) {
+      const n = sorted.length;
+      if (n === 0) return 1.0;
+      const iqr = calculateIQR(sorted);
+      const spread = iqr > 0 ? Math.min(sd, iqr / 1.34) : sd;
+      const h = (spread > 0 ? spread : 1.0) * 0.9 * Math.pow(n, -0.2);
+      return Math.max(h, 1e-4);
+    }
+
+    function getKDEDensity(x, data, h) {
+      const n = data.length;
+      let sum = 0;
+      for (let i = 0; i < n; i++) {
+        const u = (x - data[i]) / h;
+        sum += Math.exp(-0.5 * u * u) / Math.sqrt(2 * Math.PI);
+      }
+      return sum / (n * h);
+    }
+
+    function getNormalDensity(x, mean, sd) {
+      if (sd === 0) return 0;
+      return Math.exp(-Math.pow(x - mean, 2) / (2 * sd * sd)) / (sd * Math.sqrt(2 * Math.PI));
+    }
+
+    // --- INTERFACE RENDERING LOGIC ---
+    function renderApp() {
+      sortedData = [...currentData].sort((a, b) => a - b);
+      const stats = getSummaryStatistics(currentData);
+      if (!stats) return;
+
+      const swResult = runShapiroFrancia(sortedData);
+      const ksResult = runKolmogorovSmirnov(sortedData, stats.mean, stats.sd);
+      const jbResult = runJarqueBera(sortedData);
+
+      // Render Normality Cards
+      const cardsContainer = document.getElementById("test-cards-container");
+      cardsContainer.innerHTML = \`
+        <!-- Card 1: Shapiro-Francia -->
+        <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-zinc-400 font-mono">Potencia</span>
+                <div class="relative inline-block group">
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal left-0 translate-x-0">
+                    <div class="absolute top-full left-4 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">Potencia Estadística (Shapiro-Francia)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">La potencia mide la capacidad de una prueba para detectar correctamente desviaciones de la normalidad (evitando falsos negativos).</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Diseñada para muestras de tamaño medio y grande.</li>
+                      <li>• Basada en la correlación lineal (W') entre cuantiles ordenados y teóricos.</li>
+                      <li>• W' próximo a 1 indica alto ajuste a la normalidad.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${swResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${swResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+            </div>
+            <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Shapiro-Francia (W')</h4>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${swResult.value.toFixed(4)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
+              <span class="text-xs font-mono font-bold \${swResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="sw-p-value">\${swResult.p < 0.0001 ? '< 0.0001' : swResult.p.toFixed(4)}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${swResult.desc}</p>
+        </div>
+
+        <!-- Card 2: Kolmogorov-Smirnov -->
+        <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-zinc-400 font-mono">Distancia</span>
+                <div class="relative inline-block group">
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal left-1/2 -translate-x-1/2">
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">Distancia Empírica (Kolmogorov-Smirnov)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">La prueba KS evalúa la normalidad comparando la distribución acumulada observada frente a la teórica mediante una métrica de distancia espacial.</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Estadístico D mide la distancia máxima absoluta vertical entre CDFs.</li>
+                      <li>• Un valor D pequeño respalda la hipótesis nula de normalidad.</li>
+                      <li>• Sensible a cambios de centro, dispersión y forma.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${ksResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${ksResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+            </div>
+            <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Kolmogorov-Smirnov (D)</h4>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${ksResult.value.toFixed(4)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
+              <span class="text-xs font-mono font-bold \${ksResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="ks-p-value">\${ksResult.p < 0.0001 ? '< 0.0001' : ksResult.p.toFixed(4)}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${ksResult.desc}</p>
+        </div>
+
+        <!-- Card 3: Jarque-Bera -->
+        <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-zinc-400 font-mono">Momentos</span>
+                <div class="relative inline-block group">
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal right-0 translate-x-0">
+                    <div class="absolute top-full right-4 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">Momentos de Distribución (Jarque-Bera)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">La prueba JB se basa en los momentos estandarizados de tercer y cuarto orden para determinar si los datos se comportan de manera simétrica y mesocúrtica.</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Evalúa asimetría (S = 0) y exceso de curtosis (K-3 = 0).</li>
+                      <li>• Estadístico JB = (n/6) * [S² + (K-3)² / 4].</li>
+                      <li>• Altamente efectiva en muestras grandes; sensible a atípicos.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${jbResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${jbResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+            </div>
+            <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Jarque-Bera (JB)</h4>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${jbResult.value.toFixed(2)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
+              <span class="text-xs font-mono font-bold \${jbResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="jb-p-value">\${jbResult.p < 0.0001 ? '< 0.0001' : jbResult.p.toFixed(4)}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${jbResult.desc}</p>
+        </div>
+      \`;
+
+      // Render Descriptive Stats Grid
+      const statsGrid = document.getElementById("stats-table-grid");
+      statsGrid.innerHTML = \`
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Muestra (N)</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.n}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Media (μ)</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.mean.toFixed(2)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Desv. Estándar (σ)</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.sd.toFixed(2)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Mediana</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.median.toFixed(2)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Mínimo</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.min.toFixed(2)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Máximo</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.max.toFixed(2)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Asimetría</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.skewness.toFixed(3)}</span>
+        </div>
+        <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
+          <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Exceso Curtosis</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.excessKurtosis.toFixed(3)}</span>
+        </div>
+      \`;
+
+      // Render Dynamic SVG Chart
+      renderSVGChart(stats);
+    }
+
+    function renderSVGChart(stats) {
+      const minVal = sortedData[0];
+      const maxVal = sortedData[sortedData.length - 1];
+      const range = maxVal - minVal === 0 ? 1 : maxVal - minVal;
+
+      const svgWidth = 800;
+      const svgHeight = 400;
+      const paddingLeft = 65;
+      const paddingRight = 40;
+      const paddingTop = 45;
+      const paddingBottom = 55;
+
+      const chartWidth = svgWidth - paddingLeft - paddingRight;
+      const chartHeight = svgHeight - paddingTop - paddingBottom;
+
+      // Compute bins count
+      const binWidth = range / binsCount;
+      const bins = Array.from({ length: binsCount }, (_, i) => ({
+        x0: minVal + i * binWidth,
+        x1: minVal + (i + 1) * binWidth,
+        count: 0,
+        density: 0
+      }));
+
+      sortedData.forEach(val => {
+        let idx = Math.floor((val - minVal) / binWidth);
+        if (idx >= binsCount) idx = binsCount - 1;
+        if (idx < 0) idx = 0;
+        bins[idx].count++;
+      });
+
+      bins.forEach(b => {
+        b.density = b.count / (sortedData.length * binWidth);
+      });
+
+      // Sample curves
+      const padRange = range * 0.1;
+      const startX = minVal - padRange;
+      const endX = maxVal + padRange;
+      const pointsCount = 120;
+      const h = calculateBandwidth(sortedData, stats.sd);
+
+      let maxDensity = 0;
+      bins.forEach(b => { if (b.density > maxDensity) maxDensity = b.density; });
+
+      const normalPoints = [];
+      const kdePoints = [];
+
+      for (let i = 0; i < pointsCount; i++) {
+        const x = startX + (i * (endX - startX)) / (pointsCount - 1);
+        const normalY = getNormalDensity(x, stats.mean, stats.sd);
+        const kdeY = getKDEDensity(x, sortedData, h);
+        
+        normalPoints.push({ x, y: normalY });
+        kdePoints.push({ x, y: kdeY });
+
+        if (normalY > maxDensity) maxDensity = normalY;
+        if (kdeY > maxDensity) maxDensity = kdeY;
+      }
+
+      maxDensity = maxDensity === 0 ? 1 : maxDensity * 1.15;
+
+      const getSvgCoords = (x, y) => {
+        const svgX = paddingLeft + ((x - minVal) / range) * chartWidth;
+        const svgY = paddingTop + chartHeight - (y / maxDensity) * chartHeight;
+        return { x: svgX, y: svgY };
+      };
+
+      // Draw Gridlines and Y Axis Ticks
+      let yTicksHtml = "";
+      for (let i = 0; i <= 4; i++) {
+        const tickVal = (maxDensity * i) / 4;
+        const coords = getSvgCoords(minVal, tickVal);
+        yTicksHtml += \`
+          <line x1="\${paddingLeft}" y1="\${coords.y}" x2="\${svgWidth - paddingRight}" y2="\${coords.y}" class="stroke-zinc-200 dark:stroke-[#2D333D]" stroke-width="1" stroke-dasharray="\${i === 0 ? 'none' : '3,3'}" />
+          <text x="\${paddingLeft - 10}" y="\${coords.y + 4}" text-anchor="end" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">\${tickVal.toFixed(4)}</text>
+        \`;
+      }
+
+      // Draw X Axis Ticks
+      let xTicksHtml = "";
+      for (let i = 0; i < 6; i++) {
+        const tickVal = minVal + (i * range) / 5;
+        const coords = getSvgCoords(tickVal, 0);
+        xTicksHtml += \`
+          <line x1="\${coords.x}" y1="\${svgHeight - paddingBottom}" x2="\${coords.x}" y2="\${svgHeight - paddingBottom + 5}" class="stroke-zinc-300 dark:stroke-[#2D333D]" stroke-width="1.5" />
+          <text x="\${coords.x}" y="\${svgHeight - paddingBottom + 18}" text-anchor="middle" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">\${tickVal.toFixed(2)}</text>
+        \`;
+      }
+
+      // Draw Histogram Rects
+      let histHtml = "";
+      if (showHistogram) {
+        bins.forEach((b, i) => {
+          const start = getSvgCoords(b.x0, b.density);
+          const end = getSvgCoords(b.x1, 0);
+          const barWidth = Math.max(1, end.x - start.x - 1);
+          const barHeight = Math.max(0, end.y - start.y);
+          histHtml += \`
+            <rect x="\${start.x}" y="\${start.y}" width="\${barWidth}" height="\${barHeight}" class="fill-blue-100/70 dark:fill-blue-500/10 stroke-blue-300/40 dark:stroke-blue-500/40 hover:fill-blue-200 dark:hover:fill-blue-500/25 transition cursor-pointer" stroke-width="1">
+              <title>Intervalo: [\${b.x0.toFixed(2)}, \${b.x1.toFixed(2)}]\\nFrecuencia: \${b.count}\\nDensidad: \${b.density.toFixed(4)}</title>
+            </rect>
+          \`;
+        });
+      }
+
+      // Draw Theoretical Normal Curve
+      let normalPathHtml = "";
+      if (showNormalCurve && normalPoints.length > 0) {
+        let d = "";
+        normalPoints.forEach((p, i) => {
+          const coords = getSvgCoords(p.x, p.y);
+          d += \`\${i === 0 ? 'M' : 'L'} \${coords.x.toFixed(1)} \${coords.y.toFixed(1)}\`;
+        });
+        normalPathHtml = \`<path d="\${d}" fill="none" class="stroke-orange-500" stroke-width="2.5" stroke-dasharray="5,3" />\`;
+      }
+
+      // Draw KDE Curve
+      let kdePathHtml = "";
+      if (showKDECurve && kdePoints.length > 0) {
+        let d = "";
+        kdePoints.forEach((p, i) => {
+          const coords = getSvgCoords(p.x, p.y);
+          d += \`\${i === 0 ? 'M' : 'L'} \${coords.x.toFixed(1)} \${coords.y.toFixed(1)}\`;
+        });
+        kdePathHtml = \`<path d="\${d}" fill="none" class="stroke-blue-500" stroke-width="2.5" />\`;
+      }
+
+      // Update Chart DOM
+      const chartWrapper = document.getElementById("chart-wrapper");
+      chartWrapper.innerHTML = \`
+        <svg viewBox="0 0 \${svgWidth} \${svgHeight}" class="w-full h-auto overflow-visible select-none">
+          \${yTicksHtml}
+          \${xTicksHtml}
+          \${histHtml}
+          \${normalPathHtml}
+          \${kdePathHtml}
+          <!-- Axes -->
+          <line x1="\${paddingLeft}" y1="\${svgHeight - paddingBottom}" x2="\${svgWidth - paddingRight}" y2="\${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
+          <line x1="\${paddingLeft}" y1="\${paddingTop}" x2="\${paddingLeft}" y2="\${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
+        </svg>
+      \`;
+    }
+
+    // --- INTERACTIVE CONTROLS ---
+    function switchTab(tabId) {
+      const tabAnalisis = document.getElementById("tab-analisis");
+      const tabManual = document.getElementById("tab-manual");
+      const tabAnalisisBtn = document.getElementById("tab-analisis-btn");
+      const tabManualBtn = document.getElementById("tab-manual-btn");
+
+      if (tabId === 'analisis') {
+        tabAnalisis.classList.remove("hidden");
+        tabManual.classList.add("hidden");
+        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
+        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
+      } else {
+        tabAnalisis.classList.add("hidden");
+        tabManual.classList.remove("hidden");
+        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
+        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
+      }
+    }
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      if (html.classList.contains("dark")) {
+        html.classList.remove("dark");
+      } else {
+        html.classList.add("dark");
+      }
+    }
+
+    function toggleCurve(curve) {
+      if (curve === 'hist') {
+        showHistogram = !showHistogram;
+        document.getElementById("toggle-hist-btn").className = showHistogram 
+          ? "px-2 py-1 rounded bg-zinc-100 dark:bg-[#21262D] text-zinc-800 dark:text-white border border-zinc-200 dark:border-[#30363D] cursor-pointer" 
+          : "px-2 py-1 rounded text-zinc-400 border border-zinc-200 dark:border-[#30363D] cursor-pointer";
+      } else if (curve === 'normal') {
+        showNormalCurve = !showNormalCurve;
+        document.getElementById("toggle-normal-btn").className = showNormalCurve 
+          ? "px-2 py-1 rounded bg-orange-50 dark:bg-orange-950/20 text-orange-750 dark:text-orange-400 border border-orange-300 dark:border-orange-900/30 font-semibold cursor-pointer" 
+          : "px-2 py-1 rounded text-zinc-400 border border-zinc-200 dark:border-[#30363D] cursor-pointer";
+      } else if (curve === 'kde') {
+        showKDECurve = !showKDECurve;
+        document.getElementById("toggle-kde-btn").className = showKDECurve 
+          ? "px-2 py-1 rounded bg-blue-50 dark:bg-blue-950/20 text-blue-750 dark:text-blue-400 border border-blue-300 dark:border-blue-900/30 font-semibold cursor-pointer" 
+          : "px-2 py-1 rounded text-zinc-400 border border-zinc-200 dark:border-[#30363D] cursor-pointer";
+      }
+      renderApp();
+    }
+
+    function updateBinsCount(val) {
+      binsCount = parseInt(val, 10);
+      document.getElementById("bins-count-badge").innerText = binsCount;
+      renderApp();
+    }
+
+    function loadSampleDataset(idx) {
+      currentData = [...sampleDatasets[idx].data];
+      document.getElementById("column-selector-container").classList.add("hidden");
+      renderApp();
+    }
+
+    // --- FILE AND RAW DATA PARSING ---
+    function processRawText(text) {
+      // Split by newline, tab, comma, space
+      const lines = text.split(/[\\n\\r,;\\t\\s]+/);
+      const numbers = [];
+      lines.forEach(line => {
+        const clean = line.trim().replace(',', '.');
+        if (clean !== "") {
+          const num = parseFloat(clean);
+          if (!isNaN(num)) numbers.push(num);
+        }
+      });
+
+      if (numbers.length >= 5) {
+        currentData = numbers;
+        renderApp();
+      } else {
+        alert("Por favor ingresa al menos 5 números válidos para efectuar la prueba estadística.");
+      }
+    }
+
+    function processPastedData() {
+      const text = document.getElementById("paste-area").value;
+      if (text.trim() === "") {
+        alert("Pega algunos datos numéricos en la casilla.");
+        return;
+      }
+      processRawText(text);
+    }
+
+    function handleFileContent(content) {
+      // Split rows
+      const rows = content.split(/[\\r\\n]+/);
+      if (rows.length < 2) return;
+
+      // Detect separator: comma, semicolon or tab
+      let separator = ",";
+      const headerRow = rows[0];
+      if (headerRow.includes(";")) separator = ";";
+      else if (headerRow.includes("\\t")) separator = "\\t";
+
+      // Parse headers or first row columns
+      const cols = headerRow.split(separator).map(s => s.trim().replace(/^["']|["']$/g, ""));
+      const parsedCols = {};
+      cols.forEach(col => parsedCols[col] = []);
+
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i].trim() === "") continue;
+        const cells = rows[i].split(separator);
+        for (let j = 0; j < cols.length; j++) {
+          if (cells[j] !== undefined) {
+            const val = parseFloat(cells[j].trim().replace(',', '.'));
+            if (!isNaN(val)) {
+              parsedCols[cols[j]].push(val);
+            }
+          }
+        }
+      }
+
+      // Filter columns with at least 5 numeric elements
+      const validCols = {};
+      Object.keys(parsedCols).forEach(k => {
+        if (parsedCols[k].length >= 5) {
+          validCols[k] = parsedCols[k];
+        }
+      });
+
+      const validColKeys = Object.keys(validCols);
+      if (validColKeys.length === 0) {
+        alert("No se hallaron columnas con datos numéricos suficientes (mínimo 5 números por columna).");
+        return;
+      }
+
+      parsedColumns = validCols;
+      selectedColumnName = validColKeys[0];
+
+      // Update Column Selector Dropdown
+      const selectorContainer = document.getElementById("column-selector-container");
+      const selector = document.getElementById("column-selector");
+      
+      function escapeHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+      selector.innerHTML = validColKeys.map(k => \`<option value="\${escapeHtml(k)}">\${escapeHtml(k)} (\${validCols[k].length} filas)</option>\`).join("");
+      selectorContainer.classList.remove("hidden");
+
+      currentData = parsedColumns[selectedColumnName];
+      renderApp();
+    }
+
+    function selectColumn() {
+      const select = document.getElementById("column-selector");
+      selectedColumnName = select.value;
+      currentData = parsedColumns[selectedColumnName];
+      renderApp();
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        handleFileContent(evt.target.result);
+      };
+      reader.readAsText(file);
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById("dropzone").classList.remove('border-indigo-500');
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        handleFileContent(evt.target.result);
+      };
+      reader.readAsText(file);
+    }
+
+    // --- INITIALIZE APP ---
+    window.onload = function() {
+      renderApp();
+    };
+  </script>
+
+</body>
+</html>
+`;
+}
+
+export function downloadStandaloneHTML() {
+  const content = generateStandaloneHTML();
+  const blob = new Blob([content], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "NormaStat_Evaluador_Normalidad.html";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

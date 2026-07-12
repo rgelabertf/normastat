@@ -1,0 +1,6 @@
+{
+  "name": "Evaluador de Normalidad de Datos",
+  "description": "Aplicación científica interactiva para evaluar la distribución de normalidad de conjuntos de datos mediante pruebas estadísticas de Shapiro-Francia, Kolmogorov-Smirnov y Jarque-Bera con histogramas y curvas de densidad dinámicas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

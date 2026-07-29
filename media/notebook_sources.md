@@ -1,0 +1,231 @@
+- generic [ref=e1]:
+  - generic [ref=e5]:
+    - button "Aplicaciones de Google" [ref=e9] [cursor=pointer]:
+      - img [ref=e10]
+    - 'button "Cuenta de Google: Rolando Gelabert (rgelabertf@gmail.com)" [ref=e15] [cursor=pointer]':
+      - img [ref=e17]
+      - img [ref=e23]
+  - generic [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e30]:
+        - link "Página principal de Gemini Notebook" [ref=e32] [cursor=pointer]:
+          - /url: /
+          - img "Logotipo de Gemini Notebook" [ref=e34]
+        - textbox [ref=e39]: Normalidad de los datos
+        - generic "Ajustes" [ref=e43]:
+          - button "Ajustes" [ref=e45]:
+            - img [ref=e46]: settings
+      - generic [ref=e49]:
+        - button "Crear cuaderno" [ref=e51]:
+          - img [ref=e52]: add
+          - generic [ref=e53]: Crear cuaderno
+        - generic [ref=e56]:
+          - generic "Copiar cuaderno" [ref=e58]:
+            - button "Copiar cuaderno" [ref=e60]:
+              - img [ref=e61]: content_copy
+          - button [ref=e66]:
+            - img [ref=e67]: trending_up
+          - generic "Compartir cuaderno" [ref=e72]:
+            - button "Compartir cuaderno" [ref=e74]:
+              - img [ref=e75]: share
+    - generic [ref=e78]:
+      - tablist [ref=e81]:
+        - generic [ref=e82]:
+          - tab "Fuentes" [active] [selected] [ref=e83] [cursor=pointer]:
+            - generic [ref=e85]: Fuentes
+          - tab "Chat" [ref=e86] [cursor=pointer]:
+            - generic [ref=e88]: Chat
+          - tab "Studio" [ref=e89] [cursor=pointer]:
+            - generic [ref=e91]: Studio
+      - generic [ref=e92]:
+        - tabpanel "Fuentes" [ref=e179]:
+          - generic [ref=e184]:
+            - generic [ref=e185]:
+              - button "Añadir fuente" [ref=e187]:
+                - img [ref=e188]: add
+                - generic [ref=e190]: Añadir fuentes
+              - generic [ref=e196]:
+                - textbox "Descubre fuentes en función de la consulta introducida" [ref=e202]:
+                  - /placeholder: Buscar nuevas fuentes en la Web
+                - generic [ref=e203]:
+                  - generic [ref=e204]:
+                    - button "Web" [ref=e207]
+                    - button "Fast Research" [ref=e218]
+                  - generic [ref=e227]:
+                    - button "Enviar" [disabled]
+              - generic [ref=e228]:
+                - generic [ref=e229]:
+                  - button "Etiquetar automáticamente tus fuentes por tema" [ref=e231] [cursor=pointer]:
+                    - img [ref=e232]: label_auto
+                  - button "Ordenar fuentes" [ref=e235] [cursor=pointer]:
+                    - img [ref=e236]: sort
+                - generic [ref=e239]:
+                  - generic [ref=e240]: Seleccionar todo
+                  - generic [ref=e244] [cursor=pointer]:
+                    - checkbox "Seleccionar todas las fuentes" [checked] [ref=e245]
+                    - generic
+            - generic [ref=e248]:
+              - generic [ref=e249] [cursor=pointer]:
+                - button "A Test for Normality of Observations and Regression Residuals" [ref=e250]
+                - img [ref=e254]
+                - generic [ref=e257]: A Test for Normality of Observations and Regression Residuals
+                - button "Más" [ref=e259]
+                - generic [ref=e265]:
+                  - checkbox "A Test for Normality of Observations and Regression Residuals" [checked] [ref=e266]
+                  - generic:
+                    - img
+              - generic [ref=e267] [cursor=pointer]:
+                - button "An Analysis of Variance Test for Normality (Complete Samples) S. S. Shapiro; M. B. Wilk Biometrika, Vol. 52, No. 3/4. (Dec., 196" [ref=e268]
+                - img [ref=e272]
+                - generic [ref=e275]: An Analysis of Variance Test for Normality (Complete Samples) S. S. Shapiro; M. B. Wilk Biometrika, Vol. 52, No. 3/4. (Dec., 196
+                - button "Más" [ref=e277]
+                - generic [ref=e283]:
+                  - checkbox "An Analysis of Variance Test for Normality (Complete Samples) S. S. Shapiro; M. B. Wilk Biometrika, Vol. 52, No. 3/4. (Dec., 196" [checked] [ref=e284]
+                  - generic:
+                    - img
+              - generic [ref=e285] [cursor=pointer]:
+                - 'button "DescTools: Tools for Descriptive Statistics - CRAN" [ref=e286]'
+                - img [ref=e290]
+                - generic [ref=e293]: "DescTools: Tools for Descriptive Statistics - CRAN"
+                - button "Más" [ref=e295]
+                - generic [ref=e301]:
+                  - 'checkbox "DescTools: Tools for Descriptive Statistics - CRAN" [checked] [ref=e302]'
+                  - generic:
+                    - img
+              - generic [ref=e303] [cursor=pointer]:
+                - 'button "El teorema del límite central: las medias de muestras grandes y aleatorias son aproximadamente normales - Minitab - Support" [ref=e304]'
+                - img [ref=e308]
+                - generic [ref=e311]: "El teorema del límite central: las medias de muestras grandes y aleatorias son aproximadamente normales - Minitab - Support"
+                - button "Más" [ref=e313]
+                - generic [ref=e319]:
+                  - 'checkbox "El teorema del límite central: las medias de muestras grandes y aleatorias son aproximadamente normales - Minitab - Support" [checked] [ref=e320]'
+                  - generic:
+                    - img
+              - generic [ref=e321] [cursor=pointer]:
+                - button "EVALUACIÓN DE LOS SUPUESTOS ESTADÍSTICOS DEL MODELO" [ref=e322]
+                - img [ref=e326]
+                - generic [ref=e329]: EVALUACIÓN DE LOS SUPUESTOS ESTADÍSTICOS DEL MODELO
+                - button "Más" [ref=e331]
+                - generic [ref=e337]:
+                  - checkbox "EVALUACIÓN DE LOS SUPUESTOS ESTADÍSTICOS DEL MODELO" [checked] [ref=e338]
+                  - generic:
+                    - img
+              - generic [ref=e339] [cursor=pointer]:
+                - button "full issue - PressAcademia" [ref=e340]
+                - img [ref=e344]
+                - generic [ref=e347]: full issue - PressAcademia
+                - button "Más" [ref=e349]
+                - generic [ref=e355]:
+                  - checkbox "full issue - PressAcademia" [checked] [ref=e356]
+                  - generic:
+                    - img
+              - generic [ref=e357] [cursor=pointer]:
+                - button "Fundamentos de medicina basada en la evidencia Pruebas no paramétricas" [ref=e358]
+                - img [ref=e362]
+                - generic [ref=e365]: Fundamentos de medicina basada en la evidencia Pruebas no paramétricas
+                - button "Más" [ref=e367]
+                - generic [ref=e373]:
+                  - checkbox "Fundamentos de medicina basada en la evidencia Pruebas no paramétricas" [checked] [ref=e374]
+                  - generic:
+                    - img
+              - generic [ref=e375] [cursor=pointer]:
+                - button "GOODNESS-OF-FIT TECHNIQUES" [ref=e376]
+                - img [ref=e380]
+                - generic [ref=e383]: GOODNESS-OF-FIT TECHNIQUES
+                - button "Más" [ref=e385]
+                - generic [ref=e391]:
+                  - checkbox "GOODNESS-OF-FIT TECHNIQUES" [checked] [ref=e392]
+                  - generic:
+                    - img
+              - generic [ref=e393] [cursor=pointer]:
+                - button "Importancia de Conocer la Normalidad de los Datos Utilizados en los Trabajos de - Revista Docentes 2.0" [ref=e394]
+                - img [ref=e398]
+                - generic [ref=e401]: Importancia de Conocer la Normalidad de los Datos Utilizados en los Trabajos de - Revista Docentes 2.0
+                - button "Más" [ref=e403]
+                - generic [ref=e409]:
+                  - checkbox "Importancia de Conocer la Normalidad de los Datos Utilizados en los Trabajos de - Revista Docentes 2.0" [checked] [ref=e410]
+                  - generic:
+                    - img
+              - generic [ref=e411] [cursor=pointer]:
+                - button "Interpretar los resultados clave para Prueba de normalidad - Minitab" [ref=e412]
+                - img [ref=e416]
+                - generic [ref=e419]: Interpretar los resultados clave para Prueba de normalidad - Minitab
+                - button "Más" [ref=e421]
+                - generic [ref=e427]:
+                  - checkbox "Interpretar los resultados clave para Prueba de normalidad - Minitab" [checked] [ref=e428]
+                  - generic:
+                    - img
+              - generic [ref=e429] [cursor=pointer]:
+                - button "potencia de la prueba estadística de normalidad - RI UAEMex" [ref=e430]
+                - img [ref=e434]
+                - generic [ref=e437]: potencia de la prueba estadística de normalidad - RI UAEMex
+                - button "Más" [ref=e439]
+                - generic [ref=e445]:
+                  - checkbox "potencia de la prueba estadística de normalidad - RI UAEMex" [checked] [ref=e446]
+                  - generic:
+                    - img
+              - generic [ref=e447] [cursor=pointer]:
+                - button "Power Comparisons of Shapiro-Wilk, Kolmogorov-Smirnov, Lilliefors and Anderson-Darling Tests. - NRC" [ref=e448]
+                - img [ref=e452]
+                - generic [ref=e455]: Power Comparisons of Shapiro-Wilk, Kolmogorov-Smirnov, Lilliefors and Anderson-Darling Tests. - NRC
+                - button "Más" [ref=e457]
+                - generic [ref=e463]:
+                  - checkbox "Power Comparisons of Shapiro-Wilk, Kolmogorov-Smirnov, Lilliefors and Anderson-Darling Tests. - NRC" [checked] [ref=e464]
+                  - generic:
+                    - img
+              - generic [ref=e465] [cursor=pointer]:
+                - button "Prueba de normalidad - Explicación sencilla - numiqo - Calculadora estadística" [ref=e466]
+                - img [ref=e470]
+                - generic [ref=e473]: Prueba de normalidad - Explicación sencilla - numiqo - Calculadora estadística
+                - button "Más" [ref=e475]
+                - generic [ref=e481]:
+                  - checkbox "Prueba de normalidad - Explicación sencilla - numiqo - Calculadora estadística" [checked] [ref=e482]
+                  - generic:
+                    - img
+              - generic [ref=e483] [cursor=pointer]:
+                - 'button "Prueba de Normalidad en R: Shapiro-Wilk y QQ Plots - Uedufy" [ref=e484]'
+                - img [ref=e488]
+                - generic [ref=e491]: "Prueba de Normalidad en R: Shapiro-Wilk y QQ Plots - Uedufy"
+                - button "Más" [ref=e493]
+                - generic [ref=e499]:
+                  - 'checkbox "Prueba de Normalidad en R: Shapiro-Wilk y QQ Plots - Uedufy" [checked] [ref=e500]'
+                  - generic:
+                    - img
+              - generic [ref=e501] [cursor=pointer]:
+                - 'button "Pruebas estadísticas de normalidad: un análisis comparativo entre Kolmogórov- Smirnov, Shapiro-Wilk, Anderson-Darling, Ryan-J - Dialnet" [ref=e502]'
+                - img [ref=e506]
+                - generic [ref=e509]: "Pruebas estadísticas de normalidad: un análisis comparativo entre Kolmogórov- Smirnov, Shapiro-Wilk, Anderson-Darling, Ryan-J - Dialnet"
+                - button "Más" [ref=e511]
+                - generic [ref=e517]:
+                  - 'checkbox "Pruebas estadísticas de normalidad: un análisis comparativo entre Kolmogórov- Smirnov, Shapiro-Wilk, Anderson-Darling, Ryan-J - Dialnet" [checked] [ref=e518]'
+                  - generic:
+                    - img
+              - generic [ref=e519] [cursor=pointer]:
+                - 'button "PRUEBAS PARA COMPROBAR LA NORMALIDAD DE DATOS EN PROCESOS PRODUCTIVOS: ANDERSON-DARLING, RYAN-JOINER, SHAPIRO-WILK Y KOLMOGÓROV - AmeliCA" [ref=e520]'
+                - img [ref=e524]
+                - generic [ref=e527]: "PRUEBAS PARA COMPROBAR LA NORMALIDAD DE DATOS EN PROCESOS PRODUCTIVOS: ANDERSON-DARLING, RYAN-JOINER, SHAPIRO-WILK Y KOLMOGÓROV - AmeliCA"
+                - button "Más" [ref=e529]
+                - generic [ref=e535]:
+                  - 'checkbox "PRUEBAS PARA COMPROBAR LA NORMALIDAD DE DATOS EN PROCESOS PRODUCTIVOS: ANDERSON-DARLING, RYAN-JOINER, SHAPIRO-WILK Y KOLMOGÓROV - AmeliCA" [checked] [ref=e536]'
+                  - generic:
+                    - img
+              - generic [ref=e537] [cursor=pointer]:
+                - button "Samuel Sanford Shapiro - Grokipedia" [ref=e538]
+                - img [ref=e542]
+                - generic [ref=e545]: Samuel Sanford Shapiro - Grokipedia
+                - button "Más" [ref=e547]
+                - generic [ref=e553]:
+                  - checkbox "Samuel Sanford Shapiro - Grokipedia" [checked] [ref=e554]
+                  - generic:
+                    - img
+              - generic [ref=e555] [cursor=pointer]:
+                - button "Tema 5 - Bondad de Ajuste" [ref=e556]
+                - img [ref=e560]
+                - generic [ref=e563]: Tema 5 - Bondad de Ajuste
+                - button "Más" [ref=e565]
+                - generic [ref=e571]:
+                  - checkbox "Tema 5 - Bondad de Ajuste" [checked] [ref=e572]
+                  - generic:
+                    - img
+        - tabpanel [ref=e573]
+        - tabpanel [ref=e176]

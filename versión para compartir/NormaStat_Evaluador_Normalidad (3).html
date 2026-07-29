@@ -1,5 +1,4 @@
-export function generateStandaloneHTML(): string {
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -45,41 +44,6 @@ export function generateStandaloneHTML(): string {
       background: #e4e4e7;
       border-radius: 4px;
     }
-    /* Chat IA Styles */
-    #chat-messages {
-      scroll-behavior: smooth;
-    }
-    #chat-messages::-webkit-scrollbar {
-      width: 4px;
-    }
-    .chat-bubble-user {
-      background: #2563eb;
-      color: white;
-      border-radius: 16px 16px 4px 16px;
-      max-width: 80%;
-    }
-    .dark .chat-bubble-user {
-      background: #1d4ed8;
-    }
-    .chat-bubble-model {
-      background: white;
-      color: #27272a;
-      border: 1px solid #e4e4e7;
-      border-radius: 16px 16px 16px 4px;
-      max-width: 80%;
-    }
-    .dark .chat-bubble-model {
-      background: #161B22;
-      color: #e4e4e7;
-      border-color: #30363D;
-    }
-    @keyframes chat-fade-in {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .chat-fade-in {
-      animation: chat-fade-in 0.25s ease-out;
-    }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 dark:bg-[#0F1115] dark:text-zinc-50 min-h-screen transition-colors duration-200">
@@ -107,9 +71,6 @@ export function generateStandaloneHTML(): string {
           </button>
           <button id="tab-manual-btn" onclick="switchTab('manual')" class="px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition">
             Manual de Uso
-          </button>
-          <button id="tab-chat-btn" onclick="switchTab('chat')" class="px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition">
-            Chat IA
           </button>
         </div>
 
@@ -285,59 +246,18 @@ export function generateStandaloneHTML(): string {
 
     <!-- TAB 2: MANUAL -->
     <div id="tab-manual" class="hidden space-y-8 max-w-4xl mx-auto py-4">
-      <!-- Introduction Header -->
-      <div class="border-b border-zinc-150 dark:border-[#2D333D] pb-6">
-        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+      <!-- Section copied from our Manual.tsx for complete mirroring -->
+      <div class="border-b border-zinc-200 dark:border-[#2D333D] pb-6">
+        <h2 class="text-2xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
           Manual de Operación y Fundamentos Estadísticos
         </h2>
         <p class="text-zinc-500 dark:text-gray-400 mt-2 text-sm">
-          Guía paso a paso para utilizar la herramienta de evaluación de normalidad e interpretar los resultados científicos de forma rigurosa.
+          Guía técnica para interpretar los resultados de normalidad de forma rigurosa.
         </p>
-        <button onclick="downloadManualMarkdown()" class="mt-3 px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] hover:bg-zinc-200 dark:hover:bg-[#30363D] text-zinc-600 dark:text-gray-300 text-xs border border-zinc-200 dark:border-[#30363D] rounded-lg transition flex items-center gap-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-          Descargar Manual (.md)
-        </button>
       </div>
 
-      <!-- 1. Niveles de Profundidad -->
-      <section class="bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-[#161B22]/60 dark:to-[#161B22]/20 border border-zinc-200 dark:border-[#30363D] rounded-xl p-6 space-y-4">
-        <h3 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2">
-          <svg class="w-5 h-5 text-indigo-600 dark:text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Niveles de Profundidad de la Herramienta
-        </h3>
-        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-          Para adaptarse a tus necesidades específicas de aprendizaje y análisis, NormaStat cuenta con dos niveles de operación seleccionables en el panel de control superior:
-        </p>
-        <div class="grid md:grid-cols-2 gap-4">
-          <div class="bg-white dark:bg-[#0D1117] border border-zinc-200/80 dark:border-[#30363D]/80 p-4 rounded-xl space-y-2">
-            <span class="text-[10px] uppercase font-extrabold px-2 py-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-900/30 rounded-lg">
-              Principiante (Nivel Pri)
-            </span>
-            <p class="text-xs font-semibold text-zinc-800 dark:text-white pt-1">Enfoque Minimalista e Ilustrativo</p>
-            <p class="text-[11px] text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Diseñado para una visualización rápida. Oculta tecnicismos complejos para centrarse en los datos, los resultados gráficos interactivos, los <strong>Estadísticos Descriptivos</strong> de la muestra y los criterios fundamentales recomendados para tomar una decisión científica ágil.
-            </p>
-          </div>
-          <div class="bg-white dark:bg-[#0D1117] border border-zinc-200/80 dark:border-[#30363D]/80 p-4 rounded-xl space-y-2">
-            <span class="text-[10px] uppercase font-extrabold px-2 py-1 bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border border-blue-200/40 dark:border-blue-900/30 rounded-lg">
-              Profesional (Nivel Pro)
-            </span>
-            <p class="text-xs font-semibold text-zinc-800 dark:text-white pt-1">Entorno de Aprendizaje Avanzado</p>
-            <p class="text-[11px] text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Habilita explicaciones teóricas avanzadas, tooltips de ayuda estadística detallados, acceso completo a este Manual operativo y las siguientes herramientas clave integradas:
-            </p>
-            <ul class="text-[10px] text-zinc-500 dark:text-gray-400 list-disc pl-4 space-y-1 pt-1">
-              <li><strong>Asistente Científico IA (NormaStat):</strong> Chatbot contextual para resolver dudas sobre asimetría, curtosis, tests y p-valores.</li>
-              <li><strong>Exportar CSV:</strong> Permite descargar un reporte completo con métricas descriptivas y resultados de las pruebas estadísticas de normalidad.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2. Regla de Oro -->
-      <section class="bg-blue-50/50 dark:bg-blue-950/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-6">
-        <h3 class="text-base font-semibold text-blue-900 dark:text-blue-400 flex items-center gap-2 mb-3">
-          <svg class="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <div class="bg-blue-50/50 dark:bg-blue-950/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-6">
+        <h3 class="text-base font-bold text-blue-900 dark:text-blue-400 flex items-center gap-2 mb-3">
           La Regla de Oro: Interpretación del Valor de p (p-value)
         </h3>
         <p class="text-sm text-zinc-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -349,11 +269,8 @@ export function generateStandaloneHTML(): string {
             <span class="text-xs font-bold px-2 py-0.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 rounded">
               Hipótesis Nula (H₀)
             </span>
-            <p class="text-sm font-medium text-zinc-800 dark:text-white mt-2">
+            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
               Los datos provienen de una población distribuida normalmente.
-            </p>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 mt-1">
-              No hay diferencia significativa entre la muestra y la teoría normal.
             </p>
           </div>
           
@@ -361,238 +278,39 @@ export function generateStandaloneHTML(): string {
             <span class="text-xs font-bold px-2 py-0.5 bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 rounded">
               Hipótesis Alternativa (H₁)
             </span>
-            <p class="text-sm font-medium text-zinc-800 dark:text-white mt-2">
+            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
               Los datos NO provienen de una población distribuida normalmente.
             </p>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 mt-1">
-              Existe una desviación estadísticamente significativa de la normalidad.
-            </p>
           </div>
         </div>
 
-        <div class="space-y-3 border-t border-blue-100/50 dark:border-blue-950/20 pt-4">
-          <div class="flex items-start gap-2.5">
-            <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <div>
-              <p class="text-sm font-semibold text-zinc-800 dark:text-white">
-                Si p &gt; 0.05 (Nivel de significación del 5%)
-              </p>
-              <p class="text-xs text-zinc-500 dark:text-gray-400">
-                <strong class="text-emerald-600 dark:text-green-400">No se rechaza H₀</strong>. Significa que tus datos tienen un comportamiento normal y puedes utilizar estadística paramétrica con seguridad (ej. pruebas t de Student, ANOVA, correlaciones de Pearson).
-              </p>
-            </div>
-          </div>
-          
-          <div class="flex items-start gap-2.5">
-            <svg class="w-5 h-5 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <div>
-              <p class="text-sm font-semibold text-zinc-800 dark:text-white">
-                Si p ≤ 0.05
-              </p>
-              <p class="text-xs text-zinc-500 dark:text-gray-400">
-                <strong class="text-orange-600 dark:text-orange-400">Se rechaza H₀</strong>. Significa que tus datos NO tienen un comportamiento normal y deberías considerar el uso de estadística no paramétrica (ej. U de Mann-Whitney, Wilcoxon, Kruskal-Wallis, correlaciones de Spearman) o aplicar transformaciones matemáticas (como logarítmica o raíz cuadrada).
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 3. Pruebas Estadísticas Incluidas -->
-      <section class="space-y-4">
-        <h3 class="text-lg font-medium text-zinc-900 dark:text-white">
-          ¿Qué pruebas estadísticas contiene esta herramienta?
-        </h3>
-        
-        <div class="space-y-4">
-          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
-            <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
-                1. Shapiro-Francia (Aproximación de Shapiro-Wilk)
-              </h4>
-              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
-                Estadístico W'
-              </span>
-            </div>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Es una de las pruebas de normalidad más potentes y recomendadas en la literatura científica. Es una versión modificada del algoritmo clásico de Shapiro-Wilk optimizada para muestras de tamaño mediano y grande (5 ≤ N ≤ 5000). Evalúa la correlación lineal entre los datos ordenados observados y las expectativas teóricas de una normal. Un valor de W' cercano a 1 indica excelente ajuste normal.
-            </p>
-          </div>
-
-          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
-            <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
-                2. Kolmogorov-Smirnov con Estimación Paramétrica
-              </h4>
-              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
-                Estadístico D
-              </span>
-            </div>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Compara de forma directa la Función de Distribución Acumulada empírica (ECDF) de tu muestra contra la función teórica de una distribución normal. El estadístico D representa la distancia máxima vertical entre ambas funciones acumuladas. Es una prueba muy clásica y conservadora para evaluar distribuciones completas.
-            </p>
-          </div>
-
-          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
-            <div class="flex items-center justify-between">
-              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
-                3. Jarque-Bera
-              </h4>
-              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
-                Estadístico JB
-              </span>
-            </div>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Esta prueba evalúa específicamente los coeficientes de <strong>Simetría (Skewness)</strong> y <strong>Curtosis</strong> de los datos. En una distribución normal pura, el sesgo es exactamente 0 y la curtosis es exactamente 3 (exceso de curtosis es 0). La prueba de Jarque-Bera evalúa si estas dos medidas conjuntas difieren estadísticamente del estándar teórico. Es idóneo para muestras grandes.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. Carga de Datos -->
-      <section class="space-y-4">
-        <h3 class="text-lg font-medium text-zinc-900 dark:text-white">
-          ¿Cómo cargar tus propios datos?
-        </h3>
-        
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-3 bg-white dark:bg-[#161B22]">
-            <div class="flex items-center gap-2 text-zinc-800 dark:text-white">
-              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path stroke-linecap="round" stroke-linejoin="round" d="M14 2v6h6M16 13H8m8 4H8m8-8H8" /></svg>
-              <h4 class="font-semibold text-sm">Método 1: Copiar y Pegar Directo</h4>
-            </div>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Es el método más sencillo si tienes tus datos abiertos en <strong>Microsoft Excel, Google Sheets, SPSS</strong> o un editor de texto.
-            </p>
-            <ol class="text-xs text-zinc-500 dark:text-gray-400 space-y-1.5 list-decimal pl-4">
-              <li>Selecciona la columna numérica de tu hoja de cálculo.</li>
-              <li>Presiona <kbd class="px-1 py-0.5 bg-zinc-100 dark:bg-[#21262D] border border-zinc-200 dark:border-[#30363D] rounded text-[10px] text-zinc-800 dark:text-white">Ctrl+C</kbd> (o Cmd+C).</li>
-              <li>Pega el contenido directamente en la casilla de texto de la aplicación y presiona <strong>"Procesar Datos Copiados"</strong>.</li>
-            </ol>
-          </div>
-
-          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-3 bg-white dark:bg-[#161B22]">
-            <div class="flex items-center gap-2 text-zinc-800 dark:text-white">
-              <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-              <h4 class="font-semibold text-sm">Método 2: Subir archivo CSV/TXT</h4>
-            </div>
-            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
-              Ideal para conjuntos de datos guardados en archivos delimitados por comas o tabuladores.
-            </p>
-            <ol class="text-xs text-zinc-500 dark:text-gray-400 space-y-1.5 list-decimal pl-4">
-              <li>Arrastra o selecciona tu archivo <code>.csv</code> o <code>.txt</code>.</li>
-              <li>La herramienta detectará de forma inteligente si hay varias columnas.</li>
-              <li>Usa el selector desplegable para elegir cuál columna numérica deseas analizar en tiempo real.</li>
-            </ol>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Despliegue para el Docente -->
-      <section class="bg-gradient-to-r from-emerald-50 to-zinc-50 dark:from-emerald-950/10 dark:to-[#0D1117] border border-emerald-200 dark:border-emerald-900/20 rounded-xl p-6">
-        <h3 class="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">
-          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-          Despliegue e Implementación para el Docente
-        </h3>
-        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed mb-4">
-          NormaStat está disponible online sin necesidad de instalación. Comparte el siguiente enlace con tus estudiantes para que accedan desde cualquier navegador:
-        </p>
-        <div class="bg-white dark:bg-[#161B22] border border-emerald-200 dark:border-emerald-900/30 rounded-lg p-4 mb-4 font-mono text-sm text-center text-emerald-700 dark:text-emerald-400 select-all">
-          https://normastat.vercel.app
-        </div>
-        <div class="grid md:grid-cols-3 gap-3 text-xs">
-          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-            <span class="text-zinc-600 dark:text-gray-300">Sin instalaci&oacute;n &mdash; solo un navegador</span>
-          </div>
-          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-            <span class="text-zinc-600 dark:text-gray-300">Asistente IA funcional sin API key del estudiante</span>
-          </div>
-          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
-            <span class="text-zinc-600 dark:text-gray-300">Exportaci&oacute;n HTML offline disponible</span>
-          </div>
-        </div>
-        <p class="text-[10px] text-zinc-400 dark:text-gray-500 mt-3 leading-relaxed">
-          <strong>Nota t&eacute;cnica:</strong> El chat IA utiliza la API de Gemini a trav&eacute;s de un proxy serverless en Vercel. Los estudiantes no necesitan configurar ninguna clave &mdash; la herramienta funciona directamente al abrir el enlace.
-        </p>
-      </section>
-
-      <!-- 6. Ejecución Offline -->
-      <section class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-200 dark:border-[#2D333D] rounded-xl p-6">
-        <h3 class="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">
-          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          Ejecución Offline y Portabilidad Extrema (Un Solo Archivo)
-        </h3>
-        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed mb-4">
-          Esta aplicación cumple con estándares de privacidad y funcionamiento libre. Si presionas el botón de <strong>"Exportar Aplicación HTML Autónoma"</strong>, se compilará un archivo HTML autocontenido de apenas unos kilobytes que incluye toda la lógica matemática, los gráficos SVG dinámicos y los estilos visuales en un solo archivo.
-        </p>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 text-xs">
-          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span class="font-mono text-zinc-600 dark:text-gray-300">100% Privado (Tus datos nunca salen de tu equipo)</span>
-          </div>
-          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span class="font-mono text-zinc-600 dark:text-gray-300">Funciona en tablets, smartphones y laptops sin internet</span>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    </div>
-
-    <!-- TAB 3: CHAT IA -->
-    <div id="tab-chat" class="hidden space-y-6 max-w-4xl mx-auto py-4">
-      <div class="border-b border-zinc-150 dark:border-[#2D333D] pb-6">
-        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
-          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-          Asistente Cient&iacute;fico IA
-        </h2>
-        <p class="text-zinc-500 dark:text-gray-400 mt-2 text-sm">
-          Consulta al asistente NormaStat sobre estad&iacute;stica, normalidad, pruebas param&eacute;tricas y no param&eacute;tricas.
-        </p>
-      </div>
-
-      <!-- Messages area -->
-      <div id="chat-messages" class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-4 h-80 overflow-y-auto space-y-4">
-        <div class="chat-bubble-model p-3 text-xs chat-fade-in">
-          <p class="font-semibold mb-1">NormaStat IA</p>
-          <p>¡Hola! Soy el asistente de NormaStat. Puedo ayudarte con:</p>
-          <ul class="list-disc pl-4 mt-1 space-y-0.5">
-            <li>Interpretación de p-valores y pruebas de normalidad</li>
-            <li>Diferencia entre pruebas paramétricas y no paramétricas</li>
-            <li>Conceptos de asimetría (skewness) y curtosis</li>
-            <li>Recomendaciones sobre qué prueba estadística usar</li>
-          </ul>
+        <div class="space-y-3 pt-2">
+          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
+            <strong>Si p &gt; 0.05:</strong> No se rechaza la hipótesis nula. El comportamiento es normal. Se pueden usar pruebas paramétricas.
+          </p>
+          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
+            <strong>Si p ≤ 0.05:</strong> Se rechaza la hipótesis nula. El comportamiento difiere de la distribución normal. Se sugiere usar estadística no paramétrica.
+          </p>
         </div>
       </div>
 
-      <!-- Preset questions -->
-      <div class="flex flex-wrap gap-2" id="preset-questions">
-        <button onclick="sendPresetQuestion(0)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
-          ¿Qué significa p &lt; 0.05?
-        </button>
-        <button onclick="sendPresetQuestion(1)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
-          ¿Cuándo usar Shapiro-Wilk vs Kolmogorov-Smirnov?
-        </button>
-        <button onclick="sendPresetQuestion(2)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
-          ¿Qué son asimetría y curtosis?
-        </button>
-        <button onclick="sendPresetQuestion(3)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
-          ¿Paramétrica o no paramétrica?
-        </button>
+      <div class="space-y-4">
+        <h3 class="text-lg font-bold">Pruebas estadísticas ejecutadas</h3>
+        <div class="space-y-4 text-xs text-zinc-600 dark:text-gray-400">
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Shapiro-Francia (Variante Shapiro-Wilk)</h4>
+            <p class="mt-1">Excelente poder estadístico para muestras de hasta 5,000 datos. Mide la correlación lineal entre datos ordenados reales y esperados de una curva de campana teórica.</p>
+          </div>
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Kolmogorov-Smirnov</h4>
+            <p class="mt-1">Evalúa la máxima desviación vertical entre la curva de distribución empírica acumulada (ECDF) y la curva normal acumulada esperada.</p>
+          </div>
+          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
+            <h4 class="font-bold text-zinc-800 dark:text-white">Jarque-Bera</h4>
+            <p class="mt-1">Basado en momentos matemáticos avanzados de Asimetría (Sesgo) y Curtosis para verificar el balance y el apuntamiento de la distribución.</p>
+          </div>
+        </div>
       </div>
-
-      <!-- Input area -->
-      <div class="flex gap-2" id="chat-input-area">
-        <input id="chat-input-field" type="text" placeholder="Escribe tu pregunta sobre estad&iacute;stica..." class="flex-1 px-4 py-2.5 text-sm bg-white dark:bg-[#0D1117] border border-zinc-200 dark:border-[#30363D] rounded-xl text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50">
-        <button onclick="sendChatMessage()" id="chat-send-btn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
-          Enviar
-        </button>
-      </div>
-      <p id="chat-error" class="text-xs text-red-500 hidden"></p>
     </div>
 
   </main>
@@ -892,7 +610,7 @@ export function generateStandaloneHTML(): string {
 
       // Render Normality Cards
       const cardsContainer = document.getElementById("test-cards-container");
-      cardsContainer.innerHTML = \`
+      cardsContainer.innerHTML = `
         <!-- Card 1: Shapiro-Francia -->
         <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
           <div>
@@ -915,18 +633,18 @@ export function generateStandaloneHTML(): string {
                   </div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${swResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${swResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded ${swResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">${swResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
             </div>
             <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Shapiro-Francia (W')</h4>
             <div class="mt-3 flex items-baseline gap-2">
-              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${swResult.value.toFixed(4)}</span>
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">${swResult.value.toFixed(4)}</span>
             </div>
             <div class="flex items-center gap-1.5 mt-1">
               <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
-              <span class="text-xs font-mono font-bold \${swResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="sw-p-value">\${swResult.p < 0.0001 ? '< 0.0001' : swResult.p.toFixed(4)}</span>
+              <span class="text-xs font-mono font-bold ${swResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="sw-p-value">${swResult.p < 0.0001 ? '< 0.0001' : swResult.p.toFixed(4)}</span>
             </div>
           </div>
-          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${swResult.desc}</p>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">${swResult.desc}</p>
         </div>
 
         <!-- Card 2: Kolmogorov-Smirnov -->
@@ -951,18 +669,18 @@ export function generateStandaloneHTML(): string {
                   </div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${ksResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${ksResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded ${ksResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">${ksResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
             </div>
             <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Kolmogorov-Smirnov (D)</h4>
             <div class="mt-3 flex items-baseline gap-2">
-              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${ksResult.value.toFixed(4)}</span>
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">${ksResult.value.toFixed(4)}</span>
             </div>
             <div class="flex items-center gap-1.5 mt-1">
               <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
-              <span class="text-xs font-mono font-bold \${ksResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="ks-p-value">\${ksResult.p < 0.0001 ? '< 0.0001' : ksResult.p.toFixed(4)}</span>
+              <span class="text-xs font-mono font-bold ${ksResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="ks-p-value">${ksResult.p < 0.0001 ? '< 0.0001' : ksResult.p.toFixed(4)}</span>
             </div>
           </div>
-          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${ksResult.desc}</p>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">${ksResult.desc}</p>
         </div>
 
         <!-- Card 3: Jarque-Bera -->
@@ -987,57 +705,57 @@ export function generateStandaloneHTML(): string {
                   </div>
                 </div>
               </div>
-              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${jbResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${jbResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded ${jbResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">${jbResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
             </div>
             <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Jarque-Bera (JB)</h4>
             <div class="mt-3 flex items-baseline gap-2">
-              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${jbResult.value.toFixed(2)}</span>
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">${jbResult.value.toFixed(2)}</span>
             </div>
             <div class="flex items-center gap-1.5 mt-1">
               <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
-              <span class="text-xs font-mono font-bold \${jbResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="jb-p-value">\${jbResult.p < 0.0001 ? '< 0.0001' : jbResult.p.toFixed(4)}</span>
+              <span class="text-xs font-mono font-bold ${jbResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="jb-p-value">${jbResult.p < 0.0001 ? '< 0.0001' : jbResult.p.toFixed(4)}</span>
             </div>
           </div>
-          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${jbResult.desc}</p>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">${jbResult.desc}</p>
         </div>
-      \`;
+      `;
 
       // Render Descriptive Stats Grid
       const statsGrid = document.getElementById("stats-table-grid");
-      statsGrid.innerHTML = \`
+      statsGrid.innerHTML = `
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Muestra (N)</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.n}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.n}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Media (μ)</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.mean.toFixed(2)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.mean.toFixed(2)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Desv. Estándar (σ)</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.sd.toFixed(2)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.sd.toFixed(2)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Mediana</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.median.toFixed(2)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.median.toFixed(2)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Mínimo</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.min.toFixed(2)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.min.toFixed(2)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Máximo</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.max.toFixed(2)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.max.toFixed(2)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Asimetría</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.skewness.toFixed(3)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.skewness.toFixed(3)}</span>
         </div>
         <div class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-150 dark:border-[#30363D] p-3 rounded-lg text-center">
           <span class="block text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Exceso Curtosis</span>
-          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.excessKurtosis.toFixed(3)}</span>
+          <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.excessKurtosis.toFixed(3)}</span>
         </div>
-      \`;
+      `;
 
       // Render Dynamic SVG Chart
       renderSVGChart(stats);
@@ -1116,10 +834,10 @@ export function generateStandaloneHTML(): string {
       for (let i = 0; i <= 4; i++) {
         const tickVal = (maxDensity * i) / 4;
         const coords = getSvgCoords(minVal, tickVal);
-        yTicksHtml += \`
-          <line x1="\${paddingLeft}" y1="\${coords.y}" x2="\${svgWidth - paddingRight}" y2="\${coords.y}" class="stroke-zinc-200 dark:stroke-[#2D333D]" stroke-width="1" stroke-dasharray="\${i === 0 ? 'none' : '3,3'}" />
-          <text x="\${paddingLeft - 10}" y="\${coords.y + 4}" text-anchor="end" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">\${tickVal.toFixed(4)}</text>
-        \`;
+        yTicksHtml += `
+          <line x1="${paddingLeft}" y1="${coords.y}" x2="${svgWidth - paddingRight}" y2="${coords.y}" class="stroke-zinc-200 dark:stroke-[#2D333D]" stroke-width="1" stroke-dasharray="${i === 0 ? 'none' : '3,3'}" />
+          <text x="${paddingLeft - 10}" y="${coords.y + 4}" text-anchor="end" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">${tickVal.toFixed(4)}</text>
+        `;
       }
 
       // Draw X Axis Ticks
@@ -1127,10 +845,10 @@ export function generateStandaloneHTML(): string {
       for (let i = 0; i < 6; i++) {
         const tickVal = minVal + (i * range) / 5;
         const coords = getSvgCoords(tickVal, 0);
-        xTicksHtml += \`
-          <line x1="\${coords.x}" y1="\${svgHeight - paddingBottom}" x2="\${coords.x}" y2="\${svgHeight - paddingBottom + 5}" class="stroke-zinc-300 dark:stroke-[#2D333D]" stroke-width="1.5" />
-          <text x="\${coords.x}" y="\${svgHeight - paddingBottom + 18}" text-anchor="middle" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">\${tickVal.toFixed(2)}</text>
-        \`;
+        xTicksHtml += `
+          <line x1="${coords.x}" y1="${svgHeight - paddingBottom}" x2="${coords.x}" y2="${svgHeight - paddingBottom + 5}" class="stroke-zinc-300 dark:stroke-[#2D333D]" stroke-width="1.5" />
+          <text x="${coords.x}" y="${svgHeight - paddingBottom + 18}" text-anchor="middle" class="fill-zinc-400 dark:fill-gray-500 font-mono text-[10px]">${tickVal.toFixed(2)}</text>
+        `;
       }
 
       // Draw Histogram Rects
@@ -1141,11 +859,11 @@ export function generateStandaloneHTML(): string {
           const end = getSvgCoords(b.x1, 0);
           const barWidth = Math.max(1, end.x - start.x - 1);
           const barHeight = Math.max(0, end.y - start.y);
-          histHtml += \`
-            <rect x="\${start.x}" y="\${start.y}" width="\${barWidth}" height="\${barHeight}" class="fill-blue-100/70 dark:fill-blue-500/10 stroke-blue-300/40 dark:stroke-blue-500/40 hover:fill-blue-200 dark:hover:fill-blue-500/25 transition cursor-pointer" stroke-width="1">
-              <title>Intervalo: [\${b.x0.toFixed(2)}, \${b.x1.toFixed(2)}]\\nFrecuencia: \${b.count}\\nDensidad: \${b.density.toFixed(4)}</title>
+          histHtml += `
+            <rect x="${start.x}" y="${start.y}" width="${barWidth}" height="${barHeight}" class="fill-blue-100/70 dark:fill-blue-500/10 stroke-blue-300/40 dark:stroke-blue-500/40 hover:fill-blue-200 dark:hover:fill-blue-500/25 transition cursor-pointer" stroke-width="1">
+              <title>Intervalo: [${b.x0.toFixed(2)}, ${b.x1.toFixed(2)}]\nFrecuencia: ${b.count}\nDensidad: ${b.density.toFixed(4)}</title>
             </rect>
-          \`;
+          `;
         });
       }
 
@@ -1155,9 +873,9 @@ export function generateStandaloneHTML(): string {
         let d = "";
         normalPoints.forEach((p, i) => {
           const coords = getSvgCoords(p.x, p.y);
-          d += \`\${i === 0 ? 'M' : 'L'} \${coords.x.toFixed(1)} \${coords.y.toFixed(1)}\`;
+          d += `${i === 0 ? 'M' : 'L'} ${coords.x.toFixed(1)} ${coords.y.toFixed(1)}`;
         });
-        normalPathHtml = \`<path d="\${d}" fill="none" class="stroke-orange-500" stroke-width="2.5" stroke-dasharray="5,3" />\`;
+        normalPathHtml = `<path d="${d}" fill="none" class="stroke-orange-500" stroke-width="2.5" stroke-dasharray="5,3" />`;
       }
 
       // Draw KDE Curve
@@ -1166,45 +884,45 @@ export function generateStandaloneHTML(): string {
         let d = "";
         kdePoints.forEach((p, i) => {
           const coords = getSvgCoords(p.x, p.y);
-          d += \`\${i === 0 ? 'M' : 'L'} \${coords.x.toFixed(1)} \${coords.y.toFixed(1)}\`;
+          d += `${i === 0 ? 'M' : 'L'} ${coords.x.toFixed(1)} ${coords.y.toFixed(1)}`;
         });
-        kdePathHtml = \`<path d="\${d}" fill="none" class="stroke-blue-500" stroke-width="2.5" />\`;
+        kdePathHtml = `<path d="${d}" fill="none" class="stroke-blue-500" stroke-width="2.5" />`;
       }
 
       // Update Chart DOM
       const chartWrapper = document.getElementById("chart-wrapper");
-      chartWrapper.innerHTML = \`
-        <svg viewBox="0 0 \${svgWidth} \${svgHeight}" class="w-full h-auto overflow-visible select-none">
-          \${yTicksHtml}
-          \${xTicksHtml}
-          \${histHtml}
-          \${normalPathHtml}
-          \${kdePathHtml}
+      chartWrapper.innerHTML = `
+        <svg viewBox="0 0 ${svgWidth} ${svgHeight}" class="w-full h-auto overflow-visible select-none">
+          ${yTicksHtml}
+          ${xTicksHtml}
+          ${histHtml}
+          ${normalPathHtml}
+          ${kdePathHtml}
           <!-- Axes -->
-          <line x1="\${paddingLeft}" y1="\${svgHeight - paddingBottom}" x2="\${svgWidth - paddingRight}" y2="\${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
-          <line x1="\${paddingLeft}" y1="\${paddingTop}" x2="\${paddingLeft}" y2="\${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
+          <line x1="${paddingLeft}" y1="${svgHeight - paddingBottom}" x2="${svgWidth - paddingRight}" y2="${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
+          <line x1="${paddingLeft}" y1="${paddingTop}" x2="${paddingLeft}" y2="${svgHeight - paddingBottom}" class="stroke-zinc-300 dark:stroke-[#30363D]" stroke-width="1.5" />
         </svg>
-      \`;
+      `;
     }
 
     // --- INTERACTIVE CONTROLS ---
     function switchTab(tabId) {
       const tabAnalisis = document.getElementById("tab-analisis");
       const tabManual = document.getElementById("tab-manual");
-      const tabChat = document.getElementById("tab-chat");
       const tabAnalisisBtn = document.getElementById("tab-analisis-btn");
       const tabManualBtn = document.getElementById("tab-manual-btn");
-      const tabChatBtn = document.getElementById("tab-chat-btn");
 
-      const activeClass = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
-      const inactiveClass = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
-
-      tabAnalisis.classList.toggle("hidden", tabId !== 'analisis');
-      tabManual.classList.toggle("hidden", tabId !== 'manual');
-      tabChat.classList.toggle("hidden", tabId !== 'chat');
-      tabAnalisisBtn.className = tabId === 'analisis' ? activeClass : inactiveClass;
-      tabManualBtn.className = tabId === 'manual' ? activeClass : inactiveClass;
-      tabChatBtn.className = tabId === 'chat' ? activeClass : inactiveClass;
+      if (tabId === 'analisis') {
+        tabAnalisis.classList.remove("hidden");
+        tabManual.classList.add("hidden");
+        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
+        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
+      } else {
+        tabAnalisis.classList.add("hidden");
+        tabManual.classList.remove("hidden");
+        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
+        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
+      }
     }
 
     function toggleDarkMode() {
@@ -1251,7 +969,7 @@ export function generateStandaloneHTML(): string {
     // --- FILE AND RAW DATA PARSING ---
     function processRawText(text) {
       // Split by newline, tab, comma, space
-      const lines = text.split(/[\\n\\r,;\\t\\s]+/);
+      const lines = text.split(/[\n\r,;\t\s]+/);
       const numbers = [];
       lines.forEach(line => {
         const clean = line.trim().replace(',', '.');
@@ -1280,14 +998,14 @@ export function generateStandaloneHTML(): string {
 
     function handleFileContent(content) {
       // Split rows
-      const rows = content.split(/[\\r\\n]+/);
+      const rows = content.split(/[\r\n]+/);
       if (rows.length < 2) return;
 
       // Detect separator: comma, semicolon or tab
       let separator = ",";
       const headerRow = rows[0];
       if (headerRow.includes(";")) separator = ";";
-      else if (headerRow.includes("\\t")) separator = "\\t";
+      else if (headerRow.includes("\t")) separator = "\t";
 
       // Parse headers or first row columns
       const cols = headerRow.split(separator).map(s => s.trim().replace(/^["']|["']$/g, ""));
@@ -1329,7 +1047,7 @@ export function generateStandaloneHTML(): string {
       const selector = document.getElementById("column-selector");
       
       function escapeHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-      selector.innerHTML = validColKeys.map(k => \`<option value="\${escapeHtml(k)}">\${escapeHtml(k)} (\${validCols[k].length} filas)</option>\`).join("");
+      selector.innerHTML = validColKeys.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)} (${validCols[k].length} filas)</option>`).join("");
       selectorContainer.classList.remove("hidden");
 
       currentData = parsedColumns[selectedColumnName];
@@ -1365,247 +1083,11 @@ export function generateStandaloneHTML(): string {
       reader.readAsText(file);
     }
 
-    // --- CHAT IA FUNCTIONS ---
-    const GEMINI_API_KEY = "AIzaSyC5c_svMpnAe7t6lRflUw1FQrXLN6NawuI";
-    const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
-    const SYSTEM_INSTRUCTION = "Eres NormaStat, un asistente experto en estadística especializado en pruebas de normalidad, distribuciones, estadística paramétrica y no paramétrica. Responde en español de forma clara, educativa y concisa. Tus usuarios son estudiantes universitarios de nivel licenciatura. Si no sabes la respuesta, indícalo honestamente.";
-
-    const PRESET_QUESTIONS = [
-      "¿Qué significa p < 0.05 en una prueba de normalidad? Explica como si tuviera 15 años.",
-      "¿Cuándo debo usar Shapiro-Wilk en lugar de Kolmogorov-Smirnov para evaluar normalidad?",
-      "Explica qué son la asimetría (skewness) y la curtosis en una distribución de datos.",
-      "¿Cuál es la diferencia entre pruebas paramétricas y no paramétricas? ¿Cuándo usar cada una?"
-    ];
-
-    let chatHistory = [];
-
-    function addChatMessage(role, text) {
-      const container = document.getElementById("chat-messages");
-      const div = document.createElement("div");
-      div.className = (role === "user" ? "chat-bubble-user ml-auto" : "chat-bubble-model") + " p-3 text-xs chat-fade-in";
-      if (role === "user") {
-        div.textContent = text;
-      } else {
-        div.innerHTML = "<p class=\"font-semibold mb-1\">NormaStat IA</p>" + text.replace(/\n/g, "<br>");
-      }
-      container.appendChild(div);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function showChatError(msg) {
-      const err = document.getElementById("chat-error");
-      err.textContent = msg;
-      err.classList.remove("hidden");
-    }
-
-    function hideChatError() {
-      document.getElementById("chat-error").classList.add("hidden");
-    }
-
-    function setChatLoading(loading) {
-      const btn = document.getElementById("chat-send-btn");
-      const input = document.getElementById("chat-input-field");
-      btn.disabled = loading;
-      btn.innerHTML = loading
-        ? '<span class="inline-block animate-pulse">Pensando...</span>'
-        : '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg> Enviar';
-      input.disabled = loading;
-    }
-
-    async function sendChatMessage() {
-      const input = document.getElementById("chat-input-field");
-      const text = input.value.trim();
-      if (!text) return;
-      input.value = "";
-      hideChatError();
-      addChatMessage("user", text);
-      setChatLoading(true);
-
-      chatHistory.push({ role: "user", parts: [{ text: text }] });
-
-      try {
-        const res = await fetch(GEMINI_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-            contents: chatHistory,
-            generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-          })
-        });
-        const data = await res.json();
-
-        if (data.error) {
-          showChatError("Error: " + (data.error.message || "No se pudo conectar con la IA."));
-          chatHistory.pop();
-        } else {
-          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No se obtuvo respuesta.";
-          addChatMessage("model", reply);
-          chatHistory.push({ role: "model", parts: [{ text: reply }] });
-        }
-      } catch (err) {
-        showChatError("Error de conexión: " + err.message + ". Verifica tu conexión a internet.");
-        chatHistory.pop();
-      }
-
-      setChatLoading(false);
-    }
-
-    function sendPresetQuestion(index) {
-      const input = document.getElementById("chat-input-field");
-      input.value = PRESET_QUESTIONS[index];
-      sendChatMessage();
-    }
-
     // --- INITIALIZE APP ---
     window.onload = function() {
       renderApp();
-      document.getElementById("chat-input-field").addEventListener("keydown", function(e) {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          sendChatMessage();
-        }
-      });
     };
   </script>
 
 </body>
 </html>
-`;
-}
-
-export function downloadStandaloneHTML() {
-  const content = generateStandaloneHTML();
-  const blob = new Blob([content], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "NormaStat_Evaluador_Normalidad.html";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-export function downloadManualMarkdown() {
-  const md = `# Manual de Operación y Fundamentos Estadísticos
-**NormaStat — Evaluador de Normalidad de Datos**
-
-Guía paso a paso para utilizar la herramienta de evaluación de normalidad e interpretar los resultados científicos de forma rigurosa.
-
----
-
-## 1. Niveles de Profundidad de la Herramienta
-
-Para adaptarse a tus necesidades específicas de aprendizaje y análisis, NormaStat cuenta con dos niveles de operación seleccionables en el panel de control superior:
-
-### Principiante (Nivel Pri)
-**Enfoque Minimalista e Ilustrativo**
-Diseñado para una visualización rápida. Oculta tecnicismos complejos para centrarse en los datos, los resultados gráficos interactivos, los Estadísticos Descriptivos de la muestra y los criterios fundamentales recomendados para tomar una decisión científica ágil.
-
-### Profesional (Nivel Pro)
-**Laboratorio de Aprendizaje Estadístico**
-Pensado para clases de estadística o autoaprendizaje supervisado. Además de todo lo incluido en el nivel Principiante, incorpora:
-- Explicaciones teóricas detalladas de cada prueba.
-- Tooltips informativos sobre cada métrica y estadístico.
-- Asistente virtual **NormaStat IA** para resolver dudas conceptuales.
-- Evaluación Cruzada de Supuestos (Pruebas Múltiples).
-- Exportación detallada de resultados a CSV para reportes académicos.
-
----
-
-## 2. Regla de Oro para Interpretar el p-valor
-
-La herramienta se fundamenta en la siguiente regla de decisión universalmente aceptada:
-
-- **H₀ (Hipótesis Nula):** Los datos siguen una distribución normal.
-- **H₁ (Hipótesis Alternativa):** Los datos NO siguen una distribución normal.
-
-### Criterio de Decisión
-| Condición | Interpretación | Acción Recomendada |
-|-----------|---------------|-------------------|
-| **p > 0.05** | No se rechaza H₀ | Los datos son normales. Puedes usar pruebas **paramétricas** (t-student, ANOVA, correlación de Pearson). |
-| **p ≤ 0.05** | Se rechaza H₀ | Los datos NO son normales. Usa pruebas **no paramétricas** (Mann-Whitney, Kruskal-Wallis, Spearman) o aplica transformaciones. |
-
-> **Nota importante:** Si tu muestra tiene más de 1000 registros, considera usar un nivel de significancia más estricto (α = 0.01) para compensar la alta sensibilidad de las pruebas con muestras grandes.
-
----
-
-## 3. Pruebas Estadísticas Incluidas
-
-### Shapiro-Francia (W')
-- **Tipo:** Prueba de bondad de ajuste basada en correlación.
-- **Uso:** Variante mejorada de Shapiro-Wilk para muestras medianas y grandes.
-- **Rango recomendado:** 5 ≤ N ≤ 5000.
-- **Interpretación:** Evalúa si los datos se desvían de una distribución normal comparando los cuantiles observados vs. esperados.
-
-### Kolmogorov-Smirnov (D)
-- **Tipo:** Prueba de bondad de ajuste no paramétrica.
-- **Uso:** Compara la función de distribución acumulada empírica con la distribución normal teórica.
-- **Ventaja:** Funciona bien incluso con muestras muy grandes.
-- **Limitación:** Menos sensible que Shapiro-Francia para detectar desviaciones en las colas.
-
-### Jarque-Bera (JB)
-- **Tipo:** Prueba basada en momentos.
-- **Uso:** Evalúa conjuntamente la asimetría (skewness) y la curtosis de la muestra.
-- **Fundamento:** Una distribución normal tiene asimetría = 0 y curtosis = 3.
-- **Interpretación:** Valores grandes del estadístico JB indican desviación de la normalidad.
-
----
-
-## 4. Carga de Datos
-
-### Método 1: Copiar y Pegar
-1. Selecciona y copia tus datos desde Excel, Google Sheets, SPSS, o cualquier hoja de cálculo.
-2. Haz clic en el área de texto "Pega aquí tus datos".
-3. Pega los datos usando Ctrl+V / Cmd+V.
-4. Los datos se parsean automáticamente columna por columna.
-
-### Método 2: Cargar Archivo
-1. Haz clic en "Seleccionar archivo" o arrastra un archivo al área indicada.
-2. Formatos aceptados: **CSV** y **TXT** (valores separados por comas, tabulaciones o espacios).
-3. El sistema detecta automáticamente columnas numéricas con nombre.
-4. Cada columna se analiza de forma independiente.
-
----
-
-## 5. Despliegue para el Docente
-
-La herramienta está disponible de forma gratuita en línea para su uso inmediato en clase:
-
-- **URL de Acceso:** [https://normastat.vercel.app](https://normastat.vercel.app)
-- **No requiere instalación** — funciona directamente en el navegador.
-- **No requiere registro** de estudiantes.
-- El asistente IA funciona sin necesidad de claves API para los alumnos.
-- Se puede generar un archivo **HTML independiente** para usar sin conexión.
-- Compatible con cualquier dispositivo: computadora, tableta o celular.
-
----
-
-## 6. Ejecución Offline (Exportar HTML Autónomo)
-
-La herramienta permite generar un archivo HTML completamente independiente y autocontenido para ejecutarse sin conexión a internet:
-
-1. Carga y analiza tus datos en la versión en línea.
-2. Haz clic en **"Exportar HTML Autónomo"** en el panel de resultados.
-3. El archivo generado contiene **todo** el código necesario (HTML+CSS+JS) incrustado.
-4. Funciona en cualquier navegador moderno sin servidor ni conexión.
-5. Los datos permanecen **100% privados** — nunca salen de tu dispositivo.
-6. Ideal para entornos educativos sin internet o para preservar resultados.
-
----
-
-> **NormaStat** — Evaluador de Normalidad de Datos  
-> GitHub: [https://github.com/rogeliodh/Normalidad](https://github.com/rogeliodh/Normalidad)  
-> Documento generado automáticamente desde la aplicación.
-`;
-  const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "NormaStat_Manual.md";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}

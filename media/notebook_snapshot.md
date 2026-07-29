@@ -1,0 +1,58 @@
+- generic [ref=e1]:
+  - generic [ref=e5]:
+    - button "Aplicaciones de Google" [ref=e9] [cursor=pointer]:
+      - img [ref=e10]
+    - 'button "Cuenta de Google: Rolando Gelabert (rgelabertf@gmail.com)" [ref=e15] [cursor=pointer]':
+      - img [ref=e17]
+      - img [ref=e23]
+  - generic [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e30]:
+        - link "Página principal de Gemini Notebook" [ref=e32] [cursor=pointer]:
+          - /url: /
+          - img "Logotipo de Gemini Notebook" [ref=e34]
+        - textbox [ref=e39]: Normalidad de los datos
+        - generic "Ajustes" [ref=e43]:
+          - button "Ajustes" [ref=e45]:
+            - img [ref=e46]: settings
+      - generic [ref=e49]:
+        - button "Crear cuaderno" [ref=e51]:
+          - img [ref=e52]: add
+          - generic [ref=e53]: Crear cuaderno
+        - generic [ref=e56]:
+          - generic "Copiar cuaderno" [ref=e58]:
+            - button "Copiar cuaderno" [ref=e60]:
+              - img [ref=e61]: content_copy
+          - button [ref=e66]:
+            - img [ref=e67]: trending_up
+          - generic "Compartir cuaderno" [ref=e72]:
+            - button "Compartir cuaderno" [ref=e74]:
+              - img [ref=e75]: share
+    - generic [ref=e78]:
+      - tablist [ref=e81]:
+        - generic [ref=e82]:
+          - tab "Fuentes" [ref=e83] [cursor=pointer]:
+            - generic [ref=e85]: Fuentes
+          - tab "Chat" [selected] [ref=e86] [cursor=pointer]:
+            - generic [ref=e88]: Chat
+          - tab "Studio" [ref=e89] [cursor=pointer]:
+            - generic [ref=e91]: Studio
+      - generic [ref=e92]:
+        - tabpanel [ref=e93]
+        - tabpanel "Chat" [ref=e94]:
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - button "Configurar cuaderno" [ref=e98] [cursor=pointer]:
+                - img [ref=e99]: tune
+              - button "Opciones del chat" [ref=e102] [cursor=pointer]:
+                - img [ref=e103]: more_vert
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - generic [ref=e109]
+                - generic [ref=e123]
+              - generic [ref=e168]:
+                - textbox "Cuadro de consulta" [active] [ref=e170]:
+                  - /placeholder: Empieza a escribir...
+                - generic [ref=e171]
+        - tabpanel [ref=e176]
+    - contentinfo [ref=e177]: Gemini Notebook puede ofrecer respuestas incorrectas. Compruébalas.

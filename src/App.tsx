@@ -10,6 +10,7 @@ import { Chart } from "./components/Chart";
 import { Tooltip } from "./components/Tooltip";
 import { Manual } from "./components/Manual";
 import { AiChat } from "./components/AiChat";
+import { ShapiroWilkTutorial } from "./components/ShapiroWilkTutorial";
 import { downloadStandaloneHTML } from "./components/ExportHTML";
 import { 
   FileSpreadsheet, 
@@ -26,7 +27,8 @@ import {
   HelpCircle,
   Sun,
   Moon,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from "lucide-react";
 
 export default function App() {
@@ -331,6 +333,18 @@ export default function App() {
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                     <span>Manual</span>
+                  </button>
+                  <button
+                    id="btn-nav-tutorial"
+                    onClick={() => setActiveTab("tutorial")}
+                    className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
+                      activeTab === "tutorial"
+                        ? "bg-white dark:bg-blue-600 text-zinc-900 dark:text-white shadow-sm"
+                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
+                    }`}
+                  >
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    <span>Tutorial SW</span>
                   </button>
                 </div>
                 <div className="h-5 w-px bg-zinc-200 dark:bg-[#2D333D]"></div>
@@ -927,6 +941,10 @@ export default function App() {
 
             </div>
 
+          </div>
+        ) : activeTab === "tutorial" ? (
+          <div className="animate-fade-in">
+            <ShapiroWilkTutorial />
           </div>
         ) : (
           <div className="animate-fade-in">

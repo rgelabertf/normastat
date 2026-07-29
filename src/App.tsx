@@ -11,6 +11,9 @@ import { Tooltip } from "./components/Tooltip";
 import { Manual } from "./components/Manual";
 import { AiChat } from "./components/AiChat";
 import { ShapiroWilkTutorial } from "./components/ShapiroWilkTutorial";
+import { KolmogorovSmirnovTutorial } from "./components/KolmogorovSmirnovTutorial";
+import { JarqueBeraTutorial } from "./components/JarqueBeraTutorial";
+import { ChiSquareTutorial } from "./components/ChiSquareTutorial";
 import { downloadStandaloneHTML } from "./components/ExportHTML";
 import { 
   FileSpreadsheet, 
@@ -33,7 +36,7 @@ import {
 
 export default function App() {
   const [level, setLevel] = useState<"pri" | "pro">("pro");
-  const [activeTab, setActiveTab] = useState<"analisis" | "manual">("analisis");
+  const [activeTab, setActiveTab] = useState<"analisis" | "manual" | "tutorial_sw" | "tutorial_ks" | "tutorial_jb" | "tutorial_chi">("analisis");
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [rawData, setRawData] = useState<number[]>(sampleDatasets[0].data);
   const [binsCount, setBinsCount] = useState<number>(15);
@@ -305,49 +308,39 @@ export default function App() {
           {/* Nav & Exporter & Theme */}
           <div className="flex items-center gap-3">
             
-            {/* Tabs switcher */}
+            {/* Tabs switcher — scrollable */}
             {level === "pro" && (
               <>
-                <div className="bg-zinc-100 dark:bg-[#0D1117] p-1 rounded-lg flex items-center text-xs font-semibold border dark:border-[#2D333D]">
-                  <button
-                    id="btn-nav-analisis"
-                    onClick={() => setActiveTab("analisis")}
-                    className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-                      activeTab === "analisis"
-                        ? "bg-white dark:bg-blue-600 text-zinc-900 dark:text-white shadow-sm"
-                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
-                    }`}
-                  >
-                    <Database className="w-3.5 h-3.5" />
-                    <span>Análisis</span>
-                  </button>
-                  
-                  <button
-                    id="btn-nav-manual"
-                    onClick={() => setActiveTab("manual")}
-                    className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-                      activeTab === "manual"
-                        ? "bg-white dark:bg-blue-600 text-zinc-900 dark:text-white shadow-sm"
-                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
-                    }`}
-                  >
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>Manual</span>
-                  </button>
-                  <button
-                    id="btn-nav-tutorial"
-                    onClick={() => setActiveTab("tutorial")}
-                    className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 ${
-                      activeTab === "tutorial"
-                        ? "bg-white dark:bg-blue-600 text-zinc-900 dark:text-white shadow-sm"
-                        : "text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
-                    }`}
-                  >
-                    <BarChart3 className="w-3.5 h-3.5" />
-                    <span>Tutorial SW</span>
-                  </button>
+                <div className="overflow-x-auto scrollbar-hide max-w-[calc(100vw-18rem)]">
+                  <div className="bg-zinc-100 dark:bg-[#0D1117] p-1 rounded-lg flex items-center text-xs font-semibold border dark:border-[#2D333D] min-w-max">
+                    {[
+                      { id: "analisis", label: "Análisis", icon: Database },
+                      { id: "manual", label: "Manual", icon: BookOpen },
+                      { id: "tutorial_sw", label: "Tutorial SW", icon: BarChart3 },
+                      { id: "tutorial_ks", label: "Tutorial KS", icon: BarChart3 },
+                      { id: "tutorial_jb", label: "Tutorial JB", icon: BarChart3 },
+                      { id: "tutorial_chi", label: "Tutorial χ²", icon: BarChart3 },
+                    ].map((tab) => {
+                      const Icon = tab.icon;
+                      return (
+                        <button
+                          key={tab.id}
+                          id={`btn-nav-${tab.id}`}
+                          onClick={() => setActiveTab(tab.id as any)}
+                          className={`px-3 py-1.5 rounded-md transition flex items-center gap-1.5 whitespace-nowrap ${
+                            activeTab === tab.id
+                              ? "bg-white dark:bg-blue-600 text-zinc-900 dark:text-white shadow-sm"
+                              : "text-zinc-500 hover:text-zinc-800 dark:hover:text-white"
+                          }`}
+                        >
+                          <Icon className="w-3.5 h-3.5" />
+                          <span>{tab.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="h-5 w-px bg-zinc-200 dark:bg-[#2D333D]"></div>
+                <div className="h-5 w-px bg-zinc-200 dark:bg-[#2D333D] shrink-0"></div>
               </>
             )}
 
@@ -942,13 +935,25 @@ export default function App() {
             </div>
 
           </div>
-        ) : activeTab === "tutorial" ? (
+        ) : activeTab === "manual" ? (
+          <div className="animate-fade-in">
+            <Manual />
+          </div>
+        ) : activeTab === "tutorial_sw" ? (
           <div className="animate-fade-in">
             <ShapiroWilkTutorial />
           </div>
+        ) : activeTab === "tutorial_ks" ? (
+          <div className="animate-fade-in">
+            <KolmogorovSmirnovTutorial />
+          </div>
+        ) : activeTab === "tutorial_jb" ? (
+          <div className="animate-fade-in">
+            <JarqueBeraTutorial />
+          </div>
         ) : (
           <div className="animate-fade-in">
-            <Manual />
+            <ChiSquareTutorial />
           </div>
         )}
 

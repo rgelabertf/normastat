@@ -500,3 +500,151 @@ export const sampleDatasets: SampleDataset[] = [
     ]
   }
 ];
+
+// Chi-square CDF using regularized lower incomplete gamma function
+function chiSquareCDF(x: number, k: number): number {
+  if (x <= 0) return 0;
+  return lowerRegularizedGamma(k / 2, x / 2);
+}
+
+// Regularized lower incomplete gamma function P(a, x) using series expansion
+function lowerRegularizedGamma(a: number, x: number): number {
+  if (x < 0 || a <= 0) return 0;
+  if (x === 0) return 0;
+  if (x < a + 1) {
+    // Series representation
+    let sum = 1 / a;
+    let term = 1 / a;
+    for (let n = 1; n < 200; n++) {
+      term *= x / (a + n);
+      sum += term;
+      if (Math.abs(term) < 1e-14) break;
+    }
+    return sum * Math.exp(-x + a * Math.log(x) - logGamma(a));
+  } else {
+    // Continued fraction representation (modified Lentz)
+    const f = 1e-30;
+    let C = f;
+    let D = 1 / (x - a + 1 + f);
+    let h = D;
+    for (let i = 2; i <= 200; i++) {
+      const n = i - 1;
+      const a_n = -n * (n - a);
+      const b_n = x + 2 * n - a;
+      D = 1 / (b_n + a_n * D + f);
+      C = b_n + a_n / C + f;
+      const delta = C * D;
+      h *= delta;
+      if (Math.abs(delta - 1) < 1e-14) break;
+    }
+    const result = Math.exp(-x + a * Math.log(x) - logGamma(a)) / h;
+    return 1 - result;
+  }
+}
+
+// Log-gamma function (Lanczos approximation)
+function logGamma(z: number): number {
+  const g = 7;
+  const c = [
+    0.99999999999980993,
+    676.5203681218851,
+    -1259.1392167224028,
+    771.32342877765313,
+    -176.61502916214059,
+    12.507343278686905,
+    -0.13857109526572012,
+    9.9843695780195716e-6,
+    1.5056327351493116e-7
+  ];
+  if (z < 0.5) {
+    return Math.log(Math.PI / Math.sin(Math.PI * z)) - logGamma(1 - z);
+  }
+  z -= 1;
+  let x = c[0];
+  for (let i = 1; i < g + 2; i++) {
+    x += c[i] / (z + i);
+  }
+  const t = z + g + 0.5;
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+}
+
+// Chi-Square Goodness-of-Fit Test for Normality
+export function runChiSquareGOF(sortedData: number[], mean: number, sd: number, binsCount?: number): TestResult {
+  const n = sortedData.length;
+  const formula = "\\chi^2 = \\sum_{i=1}^{k} \\frac{(O_i - E_i)^2}{E_i}";
+
+  if (n < 8) {
+    return {
+      statisticName: "χ² Bondad de Ajuste",
+      statisticSymbol: "χ²",
+      statisticValue: 0,
+      pValue: 1.0,
+      isNormal: true,
+      interpretation: "Se requieren al menos 8 datos para la prueba χ² de bondad de ajuste.",
+      formula
+    };
+  }
+
+  const min = sortedData[0];
+  const max = sortedData[n - 1];
+  const range = max - min;
+
+  if (range === 0 || sd === 0) {
+    return {
+      statisticName: "χ² Bondad de Ajuste",
+      statisticSymbol: "χ²",
+      statisticValue: 0,
+      pValue: 0,
+      isNormal: false,
+      interpretation: "Varianza cero o datos constantes. No siguen una distribución normal.",
+      formula
+    };
+  }
+
+  // Determine number of bins (Sturges' rule as default)
+  const k = binsCount || Math.max(4, Math.ceil(1 + Math.log2(n)));
+  const binWidth = range / k;
+  
+  // Create bins and count observed frequencies
+  const observed: number[] = new Array(k).fill(0);
+  for (let i = 0; i < n; i++) {
+    let idx = Math.floor((sortedData[i] - min) / binWidth);
+    if (idx >= k) idx = k - 1;
+    if (idx < 0) idx = 0;
+    observed[idx]++;
+  }
+
+  // Calculate expected frequencies under normality
+  const expected: number[] = [];
+  let chiSquare = 0;
+
+  for (let i = 0; i < k; i++) {
+    const lower = min + i * binWidth;
+    const upper = lower + binWidth;
+    const cdfLower = stdNormalCDF((lower - mean) / sd);
+    const cdfUpper = stdNormalCDF((upper - mean) / sd);
+    const prob = cdfUpper - cdfLower;
+    const expFreq = Math.max(prob * n, 0.01); // avoid division by zero
+    expected.push(expFreq);
+    
+    if (expFreq > 0) {
+      chiSquare += Math.pow(observed[i] - expFreq, 2) / expFreq;
+    }
+  }
+
+  // Degrees of freedom: k - 1 - 2 (estimated μ and σ from sample)
+  const df = Math.max(1, k - 3);
+  const pValue = 1 - chiSquareCDF(chiSquare, df);
+
+  return {
+    statisticName: "χ² Bondad de Ajuste (Pearson)",
+    statisticSymbol: "χ²",
+    statisticValue: chiSquare,
+    pValue: pValue,
+    isNormal: pValue > 0.05,
+    interpretation: pValue > 0.05
+      ? "No se rechaza la hipótesis nula (p > 0.05). Las frecuencias observadas no difieren significativamente de las esperadas bajo normalidad."
+      : "Se rechaza la hipótesis nula (p ≤ 0.05). Las frecuencias observadas difieren significativamente de lo esperado bajo una distribución normal.",
+    formula
+  };
+}

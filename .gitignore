@@ -9,3 +9,9 @@ coverage/
 
 *.zip
 .vercel
+
+# Playwright MCP
+.playwright-mcp/
+
+# Temp files
+.tmp_*

@@ -290,35 +290,108 @@ export const JarqueBeraTutorial: React.FC = () => {
               </g>
             )}
 
-            {/* Step 2: Kurtosis visualization */}
+            {/* Step 2: Kurtosis visualization — real bell curves */}
             {step === 2 && (
               <g>
                 <rect x={padLeft} y={padTop} width={chartW} height={chartH} rx="8" className="fill-zinc-900/5 dark:fill-white/5 stroke-zinc-200 dark:stroke-[#30363D]" strokeWidth="1" />
 
-                {/* Three curves showing different kurtosis */}
-                {[
-                  { cx: 150, label: "Leptocúrtica (K > 3)", color: "stroke-amber-500 fill-amber-500/10", textColor: "fill-amber-500", rx: 35, ry: 95 },
-                  { cx: 350, label: "Mesocúrtica (K = 3)  ✓", color: "stroke-green-500 fill-green-500/10", textColor: "fill-green-500", rx: 50, ry: 80 },
-                  { cx: 550, label: "Platicúrtica (K < 3)", color: "stroke-amber-500 fill-amber-500/10", textColor: "fill-amber-500", rx: 65, ry: 65 },
-                ].map((c, i) => (
-                  <g key={`kurt-${i}`}
-                    onMouseEnter={() => setHoveredCurve(i)}
-                    onMouseLeave={() => setHoveredCurve(null)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <ellipse cx={c.cx} cy={padTop + chartH / 2 + 10} rx={c.rx} ry={c.ry} className={c.color} strokeWidth="2" />
-                    <text x={c.cx} y={padTop + chartH - 5} textAnchor="middle" className={`${c.textColor} text-[9px] font-bold`}>
-                      {c.label}
-                    </text>
-                    {/* Peak indicator */}
-                    {hoveredCurve === i && (
-                      <line x1={c.cx} y1={padTop + chartH / 2 + 10 - c.ry} x2={c.cx} y2={padTop + chartH / 2 + 10 + c.ry} className="stroke-white/50" strokeWidth="1" strokeDasharray="3,2" />
-                    )}
-                  </g>
-                ))}
+                {(() => {
+                  const NUM_PTS = 60;
+                  const xMin = -3.5, xMax = 3.5;
+                  const gauss = (x: number, s: number) => (1 / (s * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * (x / s) ** 2);
 
-                <text x={padLeft + chartW / 2} y={padTop + 18} textAnchor="middle" className="fill-zinc-400 dark:fill-gray-500 text-[9px] font-medium">
-                  Pasa el cursor sobre cada curva para ver el pico
+                  const CURVES = [
+                    { key: 'lepto', label: 'Leptocúrtica (K>3)',   strokeClass: 'stroke-amber-500', fillClass: 'fill-amber-500/15', fn: (x: number) => 0.7 * gauss(x, 0.7) + 0.3 * gauss(x, 1.5) },
+                    { key: 'meso',  label: 'Mesocúrtica (K=3)',    strokeClass: 'stroke-green-500', fillClass: 'fill-green-500/15', fn: (x: number) => gauss(x, 1.0) },
+                    { key: 'platy', label: 'Platicúrtica (K<3)',   strokeClass: 'stroke-blue-500',  fillClass: 'fill-blue-500/15',  fn: (x: number) => gauss(x, 1.5) },
+                  ];
+
+                  const allY = [];
+                  for (let i = 0; i <= NUM_PTS; i++) {
+                    const x = xMin + (i / NUM_PTS) * (xMax - xMin);
+                    CURVES.forEach(c => allY.push(c.fn(x)));
+                  }
+                  const maxY = Math.max(...allY);
+                  const chartAreaTop = padTop + 20;
+                  const chartAreaH = chartH - 50;
+                  const chartAreaW = chartW - 40;
+                  const yScale = chartAreaH / (maxY * 1.15);
+
+                  const toSvgX = (x: number) => padLeft + 20 + ((x - xMin) / (xMax - xMin)) * chartAreaW;
+                  const toSvgY = (y: number) => chartAreaTop + chartAreaH - y * yScale;
+
+                  return (
+                    <>
+                      {/* Vertical center reference line */}
+                      <line x1={toSvgX(0)} y1={chartAreaTop} x2={toSvgX(0)} y2={chartAreaTop + chartAreaH}
+                        className="stroke-zinc-300/30 dark:stroke-zinc-600/30" strokeWidth="1" strokeDasharray="3,3" />
+
+                      {/* Curves */}
+                      {CURVES.map((curve, ci) => {
+                        const pts: { x: number; y: number }[] = [];
+                        for (let i = 0; i <= NUM_PTS; i++) {
+                          const x = xMin + (i / NUM_PTS) * (xMax - xMin);
+                          pts.push({ x: toSvgX(x), y: toSvgY(curve.fn(x)) });
+                        }
+                        const polyline = pts.map(p => `${p.x},${p.y}`).join(' ');
+                        const fillPoly = polyline + ` ${pts[NUM_PTS].x},${chartAreaTop + chartAreaH} ${pts[0].x},${chartAreaTop + chartAreaH}`;
+                        const isHovered = hoveredCurve === ci;
+                        const isDimmed = hoveredCurve !== null && hoveredCurve !== ci;
+
+                        return (
+                          <g key={curve.key}
+                            onMouseEnter={() => setHoveredCurve(ci)}
+                            onMouseLeave={() => setHoveredCurve(null)}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            {/* Area fill under curve */}
+                            <polygon points={fillPoly} className={curve.fillClass}
+                              opacity={isDimmed ? 0.03 : 0.25} />
+                            {/* Curve line */}
+                            <polyline points={polyline} className={curve.strokeClass}
+                              fill="none" strokeWidth={isHovered ? 3 : 2}
+                              opacity={isDimmed ? 0.25 : 0.9} />
+                            {/* Label on hover */}
+                            {isHovered && (
+                              <text x={toSvgX(2.5)} y={toSvgY(curve.fn(2.5)) - 10}
+                                textAnchor="middle" className={`${ci === 1 ? 'fill-green-500' : ci === 0 ? 'fill-amber-500' : 'fill-blue-500'} text-[9px] font-bold`}>
+                                {curve.label}
+                              </text>
+                            )}
+                          </g>
+                        );
+                      })}
+
+                      {/* Legend */}
+                      <g transform={`translate(${padLeft + 15}, ${padTop + 15})`}>
+                        {CURVES.map((c, i) => (
+                          <g key={c.key} transform={`translate(0, ${i * 18})`}>
+                            <line x1="0" y1="6" x2="18" y2="6" className={c.strokeClass} strokeWidth="2.5" />
+                            <text x="22" y="10" className={`${i === 1 ? 'fill-green-500' : i === 0 ? 'fill-amber-500' : 'fill-blue-500'} text-[8px] font-bold`}>
+                              {c.label}
+                            </text>
+                          </g>
+                        ))}
+                      </g>
+
+                      {/* Peak height indicator */}
+                      {hoveredCurve !== null && (
+                        <g>
+                          <line x1={toSvgX(0)} y1={toSvgY(CURVES[hoveredCurve].fn(0))}
+                            x2={toSvgX(0)} y2={chartAreaTop + chartAreaH}
+                            className="stroke-white/40" strokeWidth="1" strokeDasharray="4,3" />
+                          <text x={toSvgX(0)} y={toSvgY(CURVES[hoveredCurve].fn(0)) - 6}
+                            textAnchor="middle" className="fill-white/70 text-[8px] font-bold">
+                            pico: {(CURVES[hoveredCurve].fn(0) / CURVES[1].fn(0)).toFixed(2)}× normal
+                          </text>
+                        </g>
+                      )}
+                    </>
+                  );
+                })()}
+
+                <text x={padLeft + chartW / 2} y={svgHeight - 8} textAnchor="middle" className="fill-zinc-400 dark:fill-gray-500 text-[9px] font-medium">
+                  Pasa el cursor sobre cada curva — la verde es la referencia normal
                 </text>
               </g>
             )}

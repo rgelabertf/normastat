@@ -1,0 +1,255 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]:
+          - heading "NormaStat" [level=1] [ref=e11]
+          - paragraph [ref=e12]: Evaluador Avanzado de Normalidad
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - button "Análisis" [ref=e15]:
+            - img [ref=e16]
+            - generic [ref=e20]: Análisis
+          - button "Manual" [ref=e21]:
+            - img [ref=e22]
+            - generic [ref=e24]: Manual
+          - button "Tutorial SW" [ref=e25]:
+            - img [ref=e26]
+            - generic [ref=e28]: Tutorial SW
+        - button "Exportar HTML" [ref=e30]:
+          - img [ref=e31]
+          - generic [ref=e34]: Exportar HTML
+        - button "Cambiar tema visual" [ref=e35]:
+          - img [ref=e36]
+  - main [ref=e42]:
+    - generic [ref=e43]:
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e48]: "Profundidad de Conocimientos:"
+          - generic [ref=e49]:
+            - button "Principiante (Nivel Pri)" [ref=e50] [cursor=pointer]:
+              - generic [ref=e51]: Principiante (Nivel Pri)
+            - button "Profesional (Nivel Pro)" [ref=e52] [cursor=pointer]:
+              - generic [ref=e53]: Profesional (Nivel Pro)
+        - generic [ref=e54]: "✓ Modo Avanzado: Explicaciones teóricas completas, manuales y chat IA"
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "Toma de Decisiones Científicas" [level=2] [ref=e57]
+          - paragraph [ref=e58]:
+            - text: Las pruebas evalúan si tu muestra difiere significativamente de una campana teórica de Gauss. Un valor de
+            - strong [ref=e59]: p > 0.05
+            - text: respalda la normalidad.
+        - generic [ref=e62]: Cálculos analíticos del lado cliente
+      - generic [ref=e63]:
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - heading "Ejemplos de Aprendizaje" [level=3] [ref=e66]:
+              - img [ref=e67]
+              - text: Ejemplos de Aprendizaje
+            - generic [ref=e71]:
+              - button "Estatura de Estudiantes (Normal) N = 150 Alturas simuladas de 150 estudiantes universitarios en centímetros. Sigue de manera muy precisa una distribución normal con media = 170 y desviación estándar = 7." [ref=e72]:
+                - generic [ref=e73]:
+                  - generic [ref=e74]: Estatura de Estudiantes (Normal)
+                  - generic [ref=e75]: N = 150
+                - paragraph [ref=e76]: Alturas simuladas de 150 estudiantes universitarios en centímetros. Sigue de manera muy precisa una distribución normal con media = 170 y desviación estándar = 7.
+              - button "Tiempos de Reacción (Asimétrica Positiva) N = 80 Tiempos de reacción en milisegundos de 80 participantes ante un estímulo visual. Presenta una asimetría positiva típica (sesgo a la derecha) ya que los humanos tienen un límite físico de velocidad." [ref=e77]:
+                - generic [ref=e78]:
+                  - generic [ref=e79]: Tiempos de Reacción (Asimétrica Positiva)
+                  - generic [ref=e80]: N = 80
+                - paragraph [ref=e81]: Tiempos de reacción en milisegundos de 80 participantes ante un estímulo visual. Presenta una asimetría positiva típica (sesgo a la derecha) ya que los humanos tienen un límite físico de velocidad.
+              - button "Calificaciones de Examen (Bimodal) N = 100 Resultados de un examen de matemáticas de 100 alumnos donde hay dos grupos diferenciados (los que entendieron el tema y los que necesitan reforzamiento). Produce una distribución bimodal." [ref=e82]:
+                - generic [ref=e83]:
+                  - generic [ref=e84]: Calificaciones de Examen (Bimodal)
+                  - generic [ref=e85]: N = 100
+                - paragraph [ref=e86]: Resultados de un examen de matemáticas de 100 alumnos donde hay dos grupos diferenciados (los que entendieron el tema y los que necesitan reforzamiento). Produce una distribución bimodal.
+              - button "Resultados de Dado (Uniforme) N = 120 Resultados de lanzar un dado equilibrado de 6 caras 120 veces. Al tener todas las caras la misma probabilidad, se obtiene una distribución uniforme que claramente no es normal." [ref=e87]:
+                - generic [ref=e88]:
+                  - generic [ref=e89]: Resultados de Dado (Uniforme)
+                  - generic [ref=e90]: N = 120
+                - paragraph [ref=e91]: Resultados de lanzar un dado equilibrado de 6 caras 120 veces. Al tener todas las caras la misma probabilidad, se obtiene una distribución uniforme que claramente no es normal.
+          - generic [ref=e92]:
+            - heading "Subir CSV o Archivo de Texto" [level=3] [ref=e93]:
+              - img [ref=e94]
+              - text: Subir CSV o Archivo de Texto
+            - generic [ref=e97] [cursor=pointer]:
+              - button "Choose File" [ref=e98]
+              - img [ref=e99]
+              - paragraph [ref=e102]: Arrastra tu archivo CSV/TXT aquí o haz clic
+              - paragraph [ref=e103]: Soporta separadores de comas, punto y coma, o tabuladores
+          - generic [ref=e104]:
+            - heading "Copiar y Pegar Columnas de Excel" [level=3] [ref=e105]:
+              - img [ref=e106]
+              - text: Copiar y Pegar Columnas de Excel
+            - 'textbox "Pega tu columna de datos numéricos. Ejemplo: 173.2 168.5 174.1 169.3..." [ref=e109]':
+              - /placeholder: "Pega tu columna de datos numéricos. Ejemplo:\n173.2\n168.5\n174.1\n169.3..."
+            - button "Procesar Datos Copiados" [ref=e110]
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]:
+                    - generic [ref=e117]: Potencia
+                    - button "Ayuda sobre Potencia Estadística (Shapiro-Francia)" [ref=e119]:
+                      - img [ref=e120]
+                  - generic [ref=e123]: Normal
+                - heading "Shapiro-Francia (W')" [level=4] [ref=e124]:
+                  - text: Shapiro-Francia
+                  - generic [ref=e125]: (W')
+                - generic [ref=e127]: "0.9921"
+                - generic [ref=e128]:
+                  - generic [ref=e129]: "p-value:"
+                  - generic [ref=e130]: "1.0000"
+              - paragraph [ref=e131]: No se rechaza la hipótesis nula (p > 0.05). Los datos siguen una distribución normal.
+            - generic [ref=e132]:
+              - generic [ref=e133]:
+                - generic [ref=e134]:
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: Distancia
+                    - button "Ayuda sobre Distancia Empírica (Kolmogorov-Smirnov)" [ref=e138]:
+                      - img [ref=e139]
+                  - generic [ref=e142]: Normal
+                - heading "Kolmogorov-Smirnov (D)" [level=4] [ref=e143]:
+                  - text: Kolmogorov-Smirnov
+                  - generic [ref=e144]: (D)
+                - generic [ref=e146]: "0.0399"
+                - generic [ref=e147]:
+                  - generic [ref=e148]: "p-value:"
+                  - generic [ref=e149]: "0.9676"
+              - paragraph [ref=e150]: No se rechaza la hipótesis nula (p > 0.05). Los datos no muestran desviaciones significativas respecto a la normal.
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]:
+                  - generic [ref=e154]:
+                    - generic [ref=e155]: Momentos
+                    - button "Ayuda sobre Momentos de Distribución (Jarque-Bera)" [ref=e157]:
+                      - img [ref=e158]
+                  - generic [ref=e161]: Normal
+                - heading "Jarque-Bera (JB)" [level=4] [ref=e162]:
+                  - text: Jarque-Bera
+                  - generic [ref=e163]: (JB)
+                - generic [ref=e165]: "2.95"
+                - generic [ref=e166]:
+                  - generic [ref=e167]: "p-value:"
+                  - generic [ref=e168]: "0.2289"
+              - paragraph [ref=e169]: No se rechaza la hipótesis nula (p > 0.05). Tanto la asimetría como la curtosis son consistentes con una distribución normal.
+          - generic [ref=e170]:
+            - generic [ref=e171]:
+              - generic [ref=e172]:
+                - heading "Distribución de Frecuencias y Curvas de Densidad" [level=3] [ref=e173]:
+                  - img [ref=e174]
+                  - text: Distribución de Frecuencias y Curvas de Densidad
+                - paragraph [ref=e175]: Comparativa visual de tus datos con la distribución normal teórica y la curva KDE real.
+              - generic [ref=e176]:
+                - button "Histograma" [ref=e177]:
+                  - img [ref=e178]
+                  - generic [ref=e181]: Histograma
+                - button "Curva Teórica Normal" [ref=e182]:
+                  - img [ref=e183]
+                  - generic [ref=e188]: Curva Teórica Normal
+                - generic [ref=e189]:
+                  - button "KDE Empírica" [ref=e190]:
+                    - img [ref=e191]
+                    - generic [ref=e196]: KDE Empírica
+                  - button "Ayuda sobre KDE Empírica (Kernel Density Estimation)" [ref=e198]:
+                    - img [ref=e199]
+            - img [ref=e203]:
+              - generic [ref=e205]: "0.0000"
+              - generic [ref=e207]: "0.0213"
+              - generic [ref=e209]: "0.0427"
+              - generic [ref=e211]: "0.0640"
+              - generic [ref=e213]: "0.0853"
+              - generic [ref=e215]: "0.1067"
+              - generic [ref=e217]: "160.2"
+              - generic [ref=e219]: "164.02"
+              - generic [ref=e221]: "167.84"
+              - generic [ref=e223]: "171.66"
+              - generic [ref=e225]: "175.48"
+              - generic [ref=e227]: "179.3"
+              - generic [ref=e248]: Histograma (Densidad)
+              - generic [ref=e249]: Intervalos de Valores
+              - generic [ref=e250]: Densidad de Probabilidad
+            - generic [ref=e251]:
+              - generic [ref=e252]:
+                - generic [ref=e253]: "Número de Intervalos (Bins):"
+                - generic [ref=e254]: "15"
+              - generic [ref=e255]:
+                - generic [ref=e256]: "5"
+                - slider [ref=e257] [cursor=pointer]: "15"
+                - generic [ref=e258]: "50"
+          - generic [ref=e259]:
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - img [ref=e263]
+                - generic [ref=e266]:
+                  - heading "Criterios Fundamentales de Decisión" [level=3] [ref=e267]
+                  - paragraph [ref=e268]: Guía simplificada para sustentar tu decisión científica
+              - generic [ref=e269]: ✓ SUPUESTO CUMPLIDO (Normalidad Aceptada)
+            - generic [ref=e270]:
+              - generic [ref=e271]:
+                - heading "1. Regla de Oro del p-valor (Significación)" [level=4] [ref=e272]: 1. Regla de Oro del p-valor (Significación)
+                - paragraph [ref=e274]:
+                  - text: Para aceptar la normalidad estadística, buscamos un p-valor mayor a
+                  - strong [ref=e275]: "0.05"
+                  - text: . Si es menor, la muestra se desvía del comportamiento de Gauss.
+                - generic [ref=e276]:
+                  - generic [ref=e277]:
+                    - generic [ref=e278]: "Shapiro-Francia:"
+                    - generic [ref=e279]: p = 1.0000 (✓ Normal)
+                  - generic [ref=e280]:
+                    - generic [ref=e281]: "Kolmogorov-Smirnov:"
+                    - generic [ref=e282]: p = 0.9676 (✓ Normal)
+                  - generic [ref=e283]:
+                    - generic [ref=e284]: "Jarque-Bera:"
+                    - generic [ref=e285]: p = 0.2289 (✓ Normal)
+              - generic [ref=e286]:
+                - heading "2. ¿Qué camino estadístico seguir ahora?" [level=4] [ref=e287]: 2. ¿Qué camino estadístico seguir ahora?
+                - paragraph [ref=e289]: "Dependiendo del veredicto final sobre la normalidad de tu muestra de datos, debes seleccionar las pruebas estadísticas correctas:"
+                - generic [ref=e290]:
+                  - generic [ref=e291]: "✓ Recomendación: Pruebas Paramétricas"
+                  - generic [ref=e292]:
+                    - text: "Tus datos son aptos para aplicar pruebas de alto rendimiento como:"
+                    - strong [ref=e293]: T de Student, ANOVA de un factor, Coeficiente de Pearson
+                    - text: o regresiones lineales clásicas.
+          - generic [ref=e294]:
+            - generic [ref=e295]:
+              - heading "Estadísticos Descriptivos de la Muestra" [level=3] [ref=e296]:
+                - img [ref=e297]
+                - text: Estadísticos Descriptivos de la Muestra
+              - button "Exportar Resultados (CSV)" [ref=e299] [cursor=pointer]:
+                - img [ref=e300]
+                - generic [ref=e303]: Exportar Resultados (CSV)
+            - generic [ref=e304]:
+              - generic [ref=e305]:
+                - generic [ref=e306]: Muestra (N)
+                - generic [ref=e307]: "150"
+              - generic [ref=e308]:
+                - generic [ref=e309]: Media (μ)
+                - generic [ref=e310]: "170.60"
+              - generic [ref=e311]:
+                - generic [ref=e312]: Desv. Estándar (σ)
+                - generic [ref=e313]: "4.30"
+              - generic [ref=e314]:
+                - generic [ref=e315]: Mediana
+                - generic [ref=e316]: "170.85"
+              - generic [ref=e317]:
+                - generic [ref=e318]: Mínimo
+                - generic [ref=e319]: "160.20"
+              - generic [ref=e320]:
+                - generic [ref=e321]: Máximo
+                - generic [ref=e322]: "179.30"
+              - generic [ref=e323]:
+                - generic [ref=e324]: Asimetría (Sesgo)
+                - generic [ref=e325]: "-0.147"
+              - generic [ref=e326]:
+                - generic [ref=e327]: Exceso Curtosis
+                - generic [ref=e328]: "-0.620"
+  - contentinfo [ref=e329]:
+    - generic [ref=e330]:
+      - paragraph [ref=e331]: © 2026 Rolando Gelabert Fernández — Universidad Autónoma del Carmen
+      - paragraph [ref=e332]: Desarrollada por Rolando Gelabert · Licencia MIT
+      - paragraph [ref=e333]: Todos los algoritmos de Shapiro-Francia, Kolmogorov-Smirnov y Jarque-Bera operan bajo fórmulas matemáticas nativas de alto rendimiento.
+  - button "Consultar a la IA" [ref=e335]:
+    - img [ref=e336]
+    - generic [ref=e339]: Consultar a la IA

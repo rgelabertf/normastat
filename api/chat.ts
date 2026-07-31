@@ -46,22 +46,28 @@ async function generateWithFallback(aiClient: GoogleGenAI, chatContents: any[], 
   throw lastError || new Error("No se ha podido obtener respuesta de ningún modelo de Gemini.");
 }
 
-const CORS_HEADERS = {
+const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+function applyCors(res: any) {
+  for (const [name, value] of Object.entries(CORS_HEADERS)) {
+    res.setHeader(name, value);
+  }
+}
+
 export default async function handler(req: any, res: any) {
   if (req.method === "OPTIONS") {
-    res.set(CORS_HEADERS);
+    applyCors(res);
     return res.status(204).end();
   }
   if (req.method !== "POST") {
-    res.set(CORS_HEADERS);
+    applyCors(res);
     return res.status(405).json({ error: "Method not allowed" });
   }
-  res.set(CORS_HEADERS);
+  applyCors(res);
   try {
     const { contents } = req.body;
     if (!contents || !Array.isArray(contents)) {

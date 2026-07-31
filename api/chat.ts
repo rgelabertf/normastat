@@ -17,7 +17,7 @@ Instrucciones de formato:
 - Sé interactivo y ofréceles ejemplos claros para ilustrar tus explicaciones.`;
 
 async function generateWithFallback(aiClient: GoogleGenAI, chatContents: any[], systemPrompt: string) {
-  const modelsToTry = ["gemini-3.5-flash", "gemini-3.1-flash-lite"];
+  const modelsToTry = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3.1-flash-lite"];
   const maxRetries = 2;
   let lastError: any = null;
   for (const modelName of modelsToTry) {

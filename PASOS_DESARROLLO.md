@@ -10,13 +10,13 @@ NormaStat está diseñada bajo una arquitectura full-stack moderna y liviana, op
 
 *   **Frontend (React 18 + Vite + Tailwind CSS):** Interfaz ágil de pantalla única con soporte responsivo y dos modos visuales (Claro y Oscuro). Utiliza **Recharts** para representar histogramas con campanas de Gauss superpuestas de manera dinámica y animaciones con **motion**.
 *   **Servidor Backend (Node.js + Express):** Actúa como servidor web en producción y provee un proxy seguro para el servicio **Google Gemini API**, evitando la exposición de claves secretas del lado del cliente.
-*   **Motor Estadístico Local (`/src/utils/stats.ts`):** Motor escrito en TypeScript puro que calcula estadísticas descriptivas básicas y ejecuta tres pruebas estadísticas avanzadas sin depender de servidores externos, asegurando rapidez absoluta.
+*   **Motor Estadístico Local (`/src/utils/stats.ts`):** Motor escrito en TypeScript puro que calcula estadísticas descriptivas básicas y ejecuta cuatro pruebas estadísticas avanzadas sin depender de servidores externos, asegurando rapidez absoluta.
 
 ---
 
 ## 2. Modelos Estadísticos y Fórmulas de Decisión
 
-La herramienta evalúa la normalidad de las muestras a través de tres pilares estadísticos complementarios:
+La herramienta evalúa la normalidad de las muestras a través de cuatro pilares estadísticos complementarios:
 
 ### A. Prueba de Shapiro-Francia (Potencia)
 Especialmente recomendada para muestras de tamaño mediano ($5 \le n \le 5000$). Evalúa la normalidad analizando la fuerza de la correlación lineal entre los datos ordenados de la muestra y sus cuantiles normales teóricos esperados.
@@ -34,6 +34,13 @@ Evalúa simultáneamente si la asimetría ($S$) y la curtosis ($K$) de los datos
 $$\text{Estadístico } JB = \frac{n}{6} \left( S^2 + \frac{(K - 3)^2}{4} \right)$$
 *   **p-valor > 0.05:** La distribución es adecuadamente simétrica y mesocúrtica. Se acepta la normalidad.
 
+### D. Prueba de Chi-cuadrado de Bondad de Ajuste (χ²)
+Compara las frecuencias observadas $O_i$ en cada intervalo (bin) contra las frecuencias esperadas $E_i$ bajo una distribución normal con la media y desviación de la muestra.
+$$\text{Estadístico } \chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}$$
+*Donde $k$ es el número de intervalos y los grados de libertad son $k - 3$ (uno por el total y dos por estimar $\mu$ y $\sigma$).*
+*   **p-valor > 0.05:** Las diferencias entre frecuencias observadas y esperadas son atribuibles al azar. Se acepta la normalidad.
+*   **Requisito:** Se requieren al menos 8 datos para un resultado válido.
+
 ---
 
 ## 3. Desglose del Desarrollo Paso a Paso
@@ -42,7 +49,7 @@ La construcción de la herramienta se estructuró en las siguientes fases metodo
 
 ### Fase 1: Estructura de Datos y Motor Estadístico
 1.  Se definieron los tipos de datos principales (`/src/types.ts`) para garantizar tipado estricto en estadísticas descriptivas y resultados de tests.
-2.  Se escribió el módulo autónomo de cálculo estadístico (`/src/utils/stats.ts`) que procesa la muestra para extraer la media, desviación estándar, mediana, asimetría, curtosis de momentos y estimaciones de p-valor altamente fiables para los tres tests.
+2.  Se escribió el módulo autónomo de cálculo estadístico (`/src/utils/stats.ts`) que procesa la muestra para extraer la media, desviación estándar, mediana, asimetría, curtosis de momentos y estimaciones de p-valor altamente fiables para los cuatro tests.
 
 ### Fase 2: Interfaz Reactiva y Entrada Dinámica
 1.  Se creó el componente principal (`/src/App.tsx`) con un área de texto inteligente que autodetecta formatos (datos separados por comas, espacios, tabulaciones o saltos de línea).
@@ -52,6 +59,7 @@ La construcción de la herramienta se estructuró en las siguientes fases metodo
 ### Fase 3: Visualización Dinámica de Resultados
 1.  Se implementó el componente gráfico (`/src/components/Chart.tsx`) que divide automáticamente el rango de datos en intervalos ajustables para graficar un histograma de frecuencias reales.
 2.  Se superpuso una curva de densidad teórica que se redibuja en tiempo real al cambiar los parámetros de la muestra (media y desviación estándar), ofreciendo una validación visual intuitiva.
+3.  Se implementó el componente de bondad de ajuste (`/src/components/ChiSquareChart.tsx`) que compara frecuencias observadas vs esperadas por intervalo y muestra la región crítica sobre la distribución χ².
 
 ### Fase 4: Soporte Académico y Asistente IA
 1.  Se estructuró el componente del Manual (`/src/components/Manual.tsx`) que recopila toda la fundamentación teórica de los tests y una guía detallada sobre qué camino metodológico seguir según los resultados.
@@ -87,6 +95,7 @@ El código fuente de NormaStat se organiza de la siguiente manera:
 │   └── components/
 │       ├── AiChat.tsx         # Componente de chat asistido para preguntas estadísticas
 │       ├── Chart.tsx          # Gráfico dinámico de histograma y curva normal con Recharts
+│       ├── ChiSquareChart.tsx # Gráfico de bondad de ajuste χ²: observado vs esperado y región crítica
 │       ├── Tooltip.tsx        # Notas explicativas emergentes de conceptos estadísticos
 │       ├── Manual.tsx         # Manual metodológico de aprendizaje de normalidad
 │       └── ExportHTML.ts      # Generador de reportes interactivos offline en formato HTML

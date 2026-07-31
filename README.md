@@ -6,7 +6,8 @@ Entorno interactivo para el análisis y aprendizaje de pruebas de normalidad est
 
 ## Funcionalidades
 
-- Tres pruebas de normalidad: Shapiro-Francia, Kolmogorov-Smirnov (Lilliefors) y Jarque-Bera
+- Cuatro pruebas de normalidad: Shapiro-Francia, Kolmogorov-Smirnov (Lilliefors), Jarque-Bera y Chi-cuadrado (χ²)
+- Gráfico de bondad de ajuste χ² con frecuencias observadas vs esperadas y región crítica
 - Histograma interactivo con superposición de curva normal teórica y KDE empírica (activables por el usuario)
 - Estadísticos descriptivos: media, desviación estándar, mediana, asimetría, curtosis
 - Dos niveles de profundidad: Pri (principiante) y Pro (profesional)

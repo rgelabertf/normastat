@@ -61,6 +61,13 @@ La herramienta se fundamenta en la siguiente regla de decisión universalmente a
 - **Fundamento:** Una distribución normal tiene asimetría = 0 y curtosis = 3.
 - **Interpretación:** Valores grandes del estadístico JB indican desviación de la normalidad.
 
+### Chi-cuadrado (χ²)
+- **Tipo:** Prueba de bondad de ajuste no paramétrica.
+- **Uso:** Compara las frecuencias observadas en cada intervalo (bin) contra las frecuencias esperadas bajo una distribución normal.
+- **Fundamento:** χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ, con k-3 grados de libertad (k = número de intervalos).
+- **Interpretación:** Si el p-valor > 0.05, las diferencias entre frecuencias observadas y esperadas son atribuibles al azar.
+- **Requisito:** Se requieren al menos 8 datos para obtener un resultado válido.
+
 ---
 
 ## 4. Carga de Datos

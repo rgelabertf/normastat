@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.vercel
+versión para compartir 1/
+*.pptx
+*.zip
+*.log
+.env*
+!.env.example

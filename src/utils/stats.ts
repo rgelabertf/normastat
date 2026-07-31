@@ -502,9 +502,36 @@ export const sampleDatasets: SampleDataset[] = [
 ];
 
 // Chi-square CDF using regularized lower incomplete gamma function
-function chiSquareCDF(x: number, k: number): number {
+export function chiSquareCDF(x: number, k: number): number {
   if (x <= 0) return 0;
   return lowerRegularizedGamma(k / 2, x / 2);
+}
+
+// Chi-square probability density function: f(x; k) = x^(k/2 - 1) * e^(-x/2) / (2^(k/2) * Gamma(k/2))
+export function chiSquareDensity(x: number, k: number): number {
+  if (x <= 0) return 0;
+  const exponent = (k / 2 - 1) * Math.log(x) - x / 2 - (k / 2) * Math.log(2) - logGamma(k / 2);
+  return Math.exp(exponent);
+}
+
+// Inverse chi-square CDF (percent point function) via binary search on chiSquareCDF
+export function chiSquareCriticalValue(p: number, k: number): number {
+  if (p <= 0) return 0;
+  if (p >= 1) return Infinity;
+  let lo = 0;
+  let hi = Math.max(1, k * 4);
+  while (chiSquareCDF(hi, k) < p) {
+    hi *= 2;
+  }
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    if (chiSquareCDF(mid, k) < p) {
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+  }
+  return (lo + hi) / 2;
 }
 
 // Regularized lower incomplete gamma function P(a, x) using series expansion
@@ -543,7 +570,7 @@ function lowerRegularizedGamma(a: number, x: number): number {
 }
 
 // Log-gamma function (Lanczos approximation)
-function logGamma(z: number): number {
+export function logGamma(z: number): number {
   const g = 7;
   const c = [
     0.99999999999980993,

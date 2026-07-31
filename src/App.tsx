@@ -4,9 +4,11 @@ import {
   runShapiroFrancia, 
   runKolmogorovSmirnov, 
   runJarqueBera, 
+  runChiSquareGOF, 
   sampleDatasets 
 } from "./utils/stats";
 import { Chart } from "./components/Chart";
+import { ChiSquareChart } from "./components/ChiSquareChart";
 import { Tooltip } from "./components/Tooltip";
 import { Manual } from "./components/Manual";
 import { AiChat } from "./components/AiChat";
@@ -77,6 +79,10 @@ export default function App() {
   const jbResult = useMemo(() => {
     return runJarqueBera(sortedData);
   }, [sortedData]);
+
+  const chiResult = useMemo(() => {
+    return runChiSquareGOF(sortedData, stats.mean, stats.sd, binsCount);
+  }, [sortedData, stats.mean, stats.sd, binsCount]);
 
   // Handle Loading sample dataset
   const handleLoadSample = (index: number) => {
@@ -167,12 +173,19 @@ export default function App() {
       jbResult.isNormal ? "Si" : "No",
       jbResult.interpretation
     ]);
+    csvRows.push([
+      "Chi-cuadrado",
+      chiResult.statisticValue.toString(),
+      chiResult.pValue.toString(),
+      chiResult.isNormal ? "Si" : "No",
+      chiResult.interpretation
+    ]);
     csvRows.push([]);
 
     // Section 3: Recommendation / Conclusion
-    const normalCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal].filter(Boolean).length;
-    const finalVeredict = normalCount >= 2 ? "SUPUESTO CUMPLIDO (Se acepta hipotesis de normalidad)" : "DESVIACION DETECTADA (Se rechaza hipotesis de normalidad)";
-    const finalRec = normalCount >= 2 
+    const normalCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal, chiResult.isNormal].filter(Boolean).length;
+    const finalVeredict = normalCount >= 3 ? "SUPUESTO CUMPLIDO (Se acepta hipotesis de normalidad)" : "DESVIACION DETECTADA (Se rechaza hipotesis de normalidad)";
+    const finalRec = normalCount >= 3 
       ? "Se recomienda el uso de pruebas parametricas (e.g., T de Student, ANOVA de un factor, correlacion de Pearson)."
       : "Se recomienda el uso de pruebas no parametricas (e.g., U de Mann-Whitney, Wilcoxon, Kruskal-Wallis, Spearman) o transformar los datos.";
     
@@ -606,8 +619,8 @@ export default function App() {
               {/* Right Panel: Chart and results summary (7 cols) */}
               <div className="lg:col-span-7 space-y-6">
                 
-                {/* 3 Normality Test results card */}
-                <div className="grid md:grid-cols-3 gap-4" id="stats-summary-cards">
+                {/* 4 Normality Test results card */}
+                <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4" id="stats-summary-cards">
                   
                   {/* Shapiro-Francia */}
                   <div className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between">
@@ -759,6 +772,56 @@ export default function App() {
                     </p>
                   </div>
 
+                  {/* Chi-cuadrado */}
+                  <div className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between gap-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] font-bold text-zinc-400 dark:text-gray-500 uppercase tracking-wider">Ajuste</span>
+                          {level === "pro" && (
+                            <Tooltip 
+                              title="Bondad de Ajuste (Chi-cuadrado)" 
+                              description="La prueba χ² compara las frecuencias observadas en cada intervalo contra las frecuencias esperadas bajo una distribución normal."
+                              details={[
+                                "El estadístico χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ agrega las discrepancias entre frecuencias observadas y esperadas.",
+                                "Se compara contra el valor crítico de la distribución χ² con k-3 grados de libertad.",
+                                "Un p-valor alto indica que las diferencias no son significativas y respalda la normalidad."
+                              ]}
+                              align="left"
+                            />
+                          )}
+                        </div>
+                        <span className={`px-2 py-0.5 text-[10px] font-bold rounded ${
+                          chiResult.isNormal 
+                            ? "bg-emerald-50 dark:bg-green-950/20 text-emerald-600 dark:text-green-400" 
+                            : "bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400"
+                        }`}>
+                          {chiResult.isNormal ? "Normal" : "No Normal"}
+                        </span>
+                      </div>
+                      <h4 className="text-xs font-bold text-zinc-700 dark:text-gray-300 mt-3 flex items-center gap-1">
+                        Chi-cuadrado
+                        <span className="text-[10px] font-mono text-zinc-400 dark:text-gray-500">(χ²)</span>
+                      </h4>
+                      <div className="mt-2.5 flex items-baseline">
+                        <span className="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">
+                          {chiResult.statisticValue.toFixed(4)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1 text-xs">
+                        <span className="text-zinc-400 dark:text-gray-500 font-mono text-[10px]">p-value:</span>
+                        <span className={`font-mono font-bold ${
+                          chiResult.isNormal ? "text-emerald-600 dark:text-green-400" : "text-amber-600 dark:text-amber-400"
+                        }`}>
+                          {chiResult.pValue < 0.0001 ? "< 0.0001" : chiResult.pValue.toFixed(4)}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#2D333D] pt-3">
+                      {chiResult.interpretation}
+                    </p>
+                  </div>
+
                 </div>
 
                 {/* Main Curve Plot Chart */}
@@ -769,6 +832,14 @@ export default function App() {
                   sd={stats.sd}
                   binsCount={binsCount}
                   setBinsCount={setBinsCount}
+                />
+
+                {/* Chi-square Goodness of Fit Chart */}
+                <ChiSquareChart
+                  sortedData={sortedData}
+                  mean={stats.mean}
+                  sd={stats.sd}
+                  binsCount={binsCount}
                 />
 
                 {/* Criterios Fundamentales para la Toma de Decisión (Principiante / Profesional) */}
@@ -787,8 +858,8 @@ export default function App() {
                     </div>
                     <div>
                       {(() => {
-                        const passedCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal].filter(Boolean).length;
-                        if (passedCount >= 2) {
+                        const passedCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal, chiResult.isNormal].filter(Boolean).length;
+                        if (passedCount >= 3) {
                           return (
                             <span className="px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-green-400 border border-emerald-200/40 dark:border-emerald-900/30">
                               ✓ SUPUESTO CUMPLIDO (Normalidad Aceptada)
@@ -833,6 +904,12 @@ export default function App() {
                             p = {jbResult.pValue < 0.0001 ? "< 0.0001" : jbResult.pValue.toFixed(4)} ({jbResult.isNormal ? "✓ Normal" : "✗ No Normal"})
                           </span>
                         </div>
+                        <div className="flex justify-between items-center">
+                          <span>Chi-cuadrado:</span>
+                          <span className={chiResult.isNormal ? "text-emerald-600 dark:text-green-400 font-bold" : "text-amber-600 dark:text-amber-400 font-bold"}>
+                            p = {chiResult.pValue < 0.0001 ? "< 0.0001" : chiResult.pValue.toFixed(4)} ({chiResult.isNormal ? "✓ Normal" : "✗ No Normal"})
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -846,8 +923,8 @@ export default function App() {
                       </p>
                       
                       {(() => {
-                        const passedCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal].filter(Boolean).length;
-                        if (passedCount >= 2) {
+                        const passedCount = [swResult.isNormal, ksResult.isNormal, jbResult.isNormal, chiResult.isNormal].filter(Boolean).length;
+                        if (passedCount >= 3) {
                           return (
                             <div className="bg-emerald-50/40 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 p-3 rounded-lg text-[11px] text-emerald-800 dark:text-emerald-350 space-y-1">
                               <span className="font-bold block">✓ Recomendación: Pruebas Paramétricas</span>
@@ -964,7 +1041,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-zinc-400 dark:text-gray-550 space-y-2">
           <p>© 2026 Rolando Gelabert Fernández — Universidad Autónoma del Carmen</p>
           <p>Desarrollada por Rolando Gelabert · Licencia MIT</p>
-          <p className="mt-1 font-mono text-[10px]">Todos los algoritmos de Shapiro-Francia, Kolmogorov-Smirnov y Jarque-Bera operan bajo fórmulas matemáticas nativas de alto rendimiento.</p>
+          <p className="mt-1 font-mono text-[10px]">Todos los algoritmos de Shapiro-Francia, Kolmogorov-Smirnov, Jarque-Bera y Chi-cuadrado (χ²) operan bajo fórmulas matemáticas nativas de alto rendimiento.</p>
         </div>
       </footer>
 

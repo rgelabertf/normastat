@@ -213,7 +213,7 @@ export function generateStandaloneHTML(): string {
         <div class="lg:col-span-7 space-y-6">
           
           <!-- Test results cards row -->
-          <div class="grid md:grid-cols-3 gap-4" id="test-cards-container">
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="test-cards-container">
             <!-- Cards will be dynamically injected here -->
           </div>
 
@@ -276,6 +276,61 @@ export function generateStandaloneHTML(): string {
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-table-grid">
               <!-- Grid values injected dynamically -->
+            </div>
+          </div>
+
+          <!-- Veredicto final (4 pruebas) -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 dark:border-[#2D333D] pb-3">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-50">
+                    Criterios Fundamentales de Decisión
+                  </h3>
+                  <p class="text-[10px] text-zinc-400 dark:text-gray-500 font-medium">Veredicto final tras 4 pruebas de normalidad</p>
+                </div>
+              </div>
+              <div id="verdict-badge"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 text-xs leading-relaxed">
+              <div class="space-y-3">
+                <h4 class="font-bold text-zinc-700 dark:text-gray-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  1. Regla de Oro del p-valor (Significación)
+                </h4>
+                <p class="text-zinc-500 dark:text-gray-400 text-[11px]">
+                  Para aceptar la normalidad estadística, buscamos un p-valor mayor a <strong class="text-zinc-800 dark:text-white">0.05</strong> en al menos 3 de las 4 pruebas. Si es menor, la muestra se desvía del comportamiento de Gauss.
+                </p>
+                <div class="bg-zinc-50 dark:bg-[#0D1117] p-3 rounded-lg border border-zinc-100 dark:border-[#2D333D] space-y-1.5 font-mono text-[10px]">
+                  <div class="flex justify-between items-center">
+                    <span>Shapiro-Francia:</span>
+                    <span id="verdict-sw"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Kolmogorov-Smirnov:</span>
+                    <span id="verdict-ks"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Jarque-Bera:</span>
+                    <span id="verdict-jb"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Chi-cuadrado:</span>
+                    <span id="verdict-chi"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <h4 class="font-bold text-zinc-700 dark:text-gray-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  2. ¿Qué camino estadístico seguir ahora?
+                </h4>
+                <p class="text-zinc-500 dark:text-gray-400 text-[11px]">
+                  Dependiendo del veredicto final sobre la normalidad de tu muestra de datos, debes seleccionar las pruebas estadísticas correctas:
+                </p>
+                <div id="verdict-recommendation"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -443,6 +498,20 @@ export function generateStandaloneHTML(): string {
             </div>
             <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
               Esta prueba evalúa específicamente los coeficientes de <strong>Simetría (Skewness)</strong> y <strong>Curtosis</strong> de los datos. En una distribución normal pura, el sesgo es exactamente 0 y la curtosis es exactamente 3 (exceso de curtosis es 0). La prueba de Jarque-Bera evalúa si estas dos medidas conjuntas difieren estadísticamente del estándar teórico. Es idóneo para muestras grandes.
+            </p>
+          </div>
+
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
+                4. Chi-cuadrado (Bondad de Ajuste)
+              </h4>
+              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                Estadístico χ²
+              </span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              La prueba χ² de Pearson compara las <strong>frecuencias observadas</strong> en cada intervalo de la muestra contra las <strong>frecuencias esperadas</strong> bajo una distribución normal. El estadístico χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ agrega las discrepancias entre ambas y se compara contra el valor crítico de la distribución χ² con k-3 grados de libertad (k = número de intervalos, con 2 parámetros estimados: media y desviación). Requiere al menos 8 datos. Un p-valor alto indica que las diferencias no son significativas y respalda la normalidad.
             </p>
           </div>
         </div>
@@ -843,6 +912,117 @@ export function generateStandaloneHTML(): string {
       };
     }
 
+    function logGamma(z) {
+      const g = 7;
+      const c = [
+        0.99999999999980993,
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+      ];
+      if (z < 0.5) {
+        return Math.log(Math.PI / Math.sin(Math.PI * z)) - logGamma(1 - z);
+      }
+      z -= 1;
+      let x = c[0];
+      for (let i = 1; i < g + 2; i++) {
+        x += c[i] / (z + i);
+      }
+      const t = z + g + 0.5;
+      return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+    }
+
+    function lowerRegularizedGamma(a, x) {
+      if (x < 0 || a <= 0) return 0;
+      if (x === 0) return 0;
+      if (x < a + 1) {
+        let sum = 1 / a;
+        let term = 1 / a;
+        for (let n = 1; n < 200; n++) {
+          term *= x / (a + n);
+          sum += term;
+          if (Math.abs(term) < 1e-14) break;
+        }
+        return sum * Math.exp(-x + a * Math.log(x) - logGamma(a));
+      } else {
+        const f = 1e-30;
+        let C = f;
+        let D = 1 / (x - a + 1 + f);
+        let h = D;
+        for (let i = 2; i <= 200; i++) {
+          const n = i - 1;
+          const a_n = -n * (n - a);
+          const b_n = x + 2 * n - a;
+          D = 1 / (b_n + a_n * D + f);
+          C = b_n + a_n / C + f;
+          const delta = C * D;
+          h *= delta;
+          if (Math.abs(delta - 1) < 1e-14) break;
+        }
+        const result = Math.exp(-x + a * Math.log(x) - logGamma(a)) / h;
+        return 1 - result;
+      }
+    }
+
+    function chiSquareCDF(x, k) {
+      if (x <= 0) return 0;
+      return lowerRegularizedGamma(k / 2, x / 2);
+    }
+
+    function runChiSquareGOF(sorted, mean, sd) {
+      const n = sorted.length;
+      if (n < 8) {
+        return { value: 0, p: 1.0, pass: true, desc: "Se requieren al menos 8 datos para la prueba χ² de bondad de ajuste." };
+      }
+      if (sd === 0) return { value: 0, p: 0, pass: false, desc: "Varianza cero o datos constantes. No siguen una distribución normal." };
+
+      const min = sorted[0];
+      const max = sorted[n - 1];
+      const range = max - min;
+      if (range === 0) return { value: 0, p: 0, pass: false, desc: "Varianza cero o datos constantes. No siguen una distribución normal." };
+
+      const k = Math.max(4, Math.ceil(1 + Math.log2(n)));
+      const binWidth = range / k;
+
+      const observed = new Array(k).fill(0);
+      for (let i = 0; i < n; i++) {
+        let idx = Math.floor((sorted[i] - min) / binWidth);
+        if (idx >= k) idx = k - 1;
+        if (idx < 0) idx = 0;
+        observed[idx]++;
+      }
+
+      let chiSquare = 0;
+      for (let i = 0; i < k; i++) {
+        const lower = min + i * binWidth;
+        const upper = lower + binWidth;
+        const cdfLower = stdNormalCDF((lower - mean) / sd);
+        const cdfUpper = stdNormalCDF((upper - mean) / sd);
+        const prob = cdfUpper - cdfLower;
+        const expFreq = Math.max(prob * n, 0.01);
+        if (expFreq > 0) {
+          chiSquare += Math.pow(observed[i] - expFreq, 2) / expFreq;
+        }
+      }
+
+      const df = Math.max(1, k - 3);
+      const p = 1 - chiSquareCDF(chiSquare, df);
+
+      return {
+        value: chiSquare,
+        p: p,
+        pass: p > 0.05,
+        desc: p > 0.05
+          ? "No se rechaza la hipótesis nula (p > 0.05). Las frecuencias observadas no difieren significativamente de las esperadas bajo normalidad."
+          : "Se rechaza la hipótesis nula (p ≤ 0.05). Las frecuencias observadas difieren significativamente de lo esperado bajo una distribución normal."
+      };
+    }
+
     // Bandwidth rule of thumb for KDE
     function calculateIQR(sorted) {
       const n = sorted.length;
@@ -889,6 +1069,7 @@ export function generateStandaloneHTML(): string {
       const swResult = runShapiroFrancia(sortedData);
       const ksResult = runKolmogorovSmirnov(sortedData, stats.mean, stats.sd);
       const jbResult = runJarqueBera(sortedData);
+      const chiResult = runChiSquareGOF(sortedData, stats.mean, stats.sd);
 
       // Render Normality Cards
       const cardsContainer = document.getElementById("test-cards-container");
@@ -1000,6 +1181,42 @@ export function generateStandaloneHTML(): string {
           </div>
           <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${jbResult.desc}</p>
         </div>
+
+        <!-- Card 4: Chi-cuadrado -->
+        <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-zinc-400 font-mono">Ajuste</span>
+                <div class="relative inline-block group">
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal right-0 translate-x-0">
+                    <div class="absolute top-full right-4 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">Bondad de Ajuste (Chi-cuadrado)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">La prueba χ² compara las frecuencias observadas en cada intervalo contra las frecuencias esperadas bajo una distribución normal.</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Estadístico χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ agrega las discrepancias entre frecuencias observadas y esperadas.</li>
+                      <li>• Se compara contra el valor crítico de la distribución χ² con k-3 grados de libertad.</li>
+                      <li>• Un p-valor alto indica que las diferencias no son significativas y respalda la normalidad.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded \${chiResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">\${chiResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+            </div>
+            <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Chi-cuadrado (χ²)</h4>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">\${chiResult.value.toFixed(4)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
+              <span class="text-xs font-mono font-bold \${chiResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="chi-p-value">\${chiResult.p < 0.0001 ? '< 0.0001' : chiResult.p.toFixed(4)}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">\${chiResult.desc}</p>
+        </div>
       \`;
 
       // Render Descriptive Stats Grid
@@ -1038,6 +1255,39 @@ export function generateStandaloneHTML(): string {
           <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">\${stats.excessKurtosis.toFixed(3)}</span>
         </div>
       \`;
+
+      // Render Veredicto Final (4 pruebas)
+      const passedCount = [swResult.pass, ksResult.pass, jbResult.pass, chiResult.pass].filter(Boolean).length;
+      const verdictBadge = document.getElementById("verdict-badge");
+      if (passedCount >= 3) {
+        verdictBadge.innerHTML = \`<span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-green-400 border border-emerald-200/40 dark:border-emerald-900/30">✓ SUPUESTO CUMPLIDO (Normalidad Aceptada)</span>\`;
+      } else {
+        verdictBadge.innerHTML = \`<span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-200/40 dark:border-amber-900/30">✗ DESVIACIÓN DETECTADA (No Normal)</span>\`;
+      }
+      const verdictRows = [
+        { id: "verdict-sw", result: swResult },
+        { id: "verdict-ks", result: ksResult },
+        { id: "verdict-jb", result: jbResult },
+        { id: "verdict-chi", result: chiResult }
+      ];
+      verdictRows.forEach(row => {
+        const el = document.getElementById(row.id);
+        const pass = row.result.pass;
+        const pText = row.result.p < 0.0001 ? '< 0.0001' : row.result.p.toFixed(4);
+        el.innerHTML = \`<span class="\${pass ? 'text-emerald-600 dark:text-green-400 font-bold' : 'text-amber-600 dark:text-amber-400 font-bold'}">p = \${pText} (\${pass ? '✓ Normal' : '✗ No Normal'})</span>\`;
+      });
+      const recommendation = document.getElementById("verdict-recommendation");
+      if (passedCount >= 3) {
+        recommendation.innerHTML = \`<div class="bg-emerald-50/40 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 p-3 rounded-lg text-[11px] text-emerald-800 dark:text-emerald-350 space-y-1">
+          <span class="font-bold block">✓ Recomendación: Pruebas Paramétricas</span>
+          <span>Tus datos son aptos para aplicar pruebas de alto rendimiento como: <strong>T de Student, ANOVA de un factor, Coeficiente de Pearson</strong> o regresiones lineales clásicas.</span>
+        </div>\`;
+      } else {
+        recommendation.innerHTML = \`<div class="bg-amber-50/40 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/30 p-3 rounded-lg text-[11px] text-amber-800 dark:text-amber-350 space-y-1">
+          <span class="font-bold block">⚠ Recomendación: Pruebas No Paramétricas</span>
+          <span>Se recomienda aplicar alternativas que no asumen normalidad como: <strong>U de Mann-Whitney, Wilcoxon, Kruskal-Wallis o Correlación de Spearman</strong>. También puedes aplicar transformaciones matemáticas (e.g. logaritmo natural).</span>
+        </div>\`;
+      }
 
       // Render Dynamic SVG Chart
       renderSVGChart(stats);
@@ -1366,9 +1616,7 @@ export function generateStandaloneHTML(): string {
     }
 
     // --- CHAT IA FUNCTIONS ---
-    const GEMINI_API_KEY = "AIzaSyC5c_svMpnAe7t6lRflUw1FQrXLN6NawuI";
-    const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
-    const SYSTEM_INSTRUCTION = "Eres NormaStat, un asistente experto en estadística especializado en pruebas de normalidad, distribuciones, estadística paramétrica y no paramétrica. Responde en español de forma clara, educativa y concisa. Tus usuarios son estudiantes universitarios de nivel licenciatura. Si no sabes la respuesta, indícalo honestamente.";
+    const CHAT_API_URL = "https://normastat.vercel.app/api/chat";
 
     const PRESET_QUESTIONS = [
       "¿Qué significa p < 0.05 en una prueba de normalidad? Explica como si tuviera 15 años.",
@@ -1386,7 +1634,7 @@ export function generateStandaloneHTML(): string {
       if (role === "user") {
         div.textContent = text;
       } else {
-        div.innerHTML = "<p class=\"font-semibold mb-1\">NormaStat IA</p>" + text.replace(/\n/g, "<br>");
+        div.innerHTML = '<p class="font-semibold mb-1">NormaStat IA</p>' + text.replace(/\\n/g, "<br>");
       }
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
@@ -1424,22 +1672,18 @@ export function generateStandaloneHTML(): string {
       chatHistory.push({ role: "user", parts: [{ text: text }] });
 
       try {
-        const res = await fetch(GEMINI_API_URL, {
+        const res = await fetch(CHAT_API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-            contents: chatHistory,
-            generationConfig: { temperature: 0.7, maxOutputTokens: 1024 }
-          })
+          body: JSON.stringify({ contents: chatHistory })
         });
         const data = await res.json();
 
         if (data.error) {
-          showChatError("Error: " + (data.error.message || "No se pudo conectar con la IA."));
+          showChatError("Error: " + data.error + ".");
           chatHistory.pop();
         } else {
-          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "No se obtuvo respuesta.";
+          const reply = data.text || "No se obtuvo respuesta.";
           addChatMessage("model", reply);
           chatHistory.push({ role: "model", parts: [{ text: reply }] });
         }
@@ -1550,6 +1794,13 @@ La herramienta se fundamenta en la siguiente regla de decisión universalmente a
 - **Uso:** Evalúa conjuntamente la asimetría (skewness) y la curtosis de la muestra.
 - **Fundamento:** Una distribución normal tiene asimetría = 0 y curtosis = 3.
 - **Interpretación:** Valores grandes del estadístico JB indican desviación de la normalidad.
+
+### Chi-cuadrado (χ²) — Bondad de Ajuste
+- **Tipo:** Prueba de bondad de ajuste de Pearson.
+- **Uso:** Compara las frecuencias observadas en cada intervalo contra las frecuencias esperadas bajo una distribución normal.
+- **Fundamento:** χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ, con k-3 grados de libertad (k = intervalos, 2 parámetros estimados).
+- **Requisito:** Al menos 8 datos (N ≥ 8).
+- **Interpretación:** Un p-valor alto indica que las diferencias entre frecuencias no son significativas y respalda la normalidad.
 
 ---
 

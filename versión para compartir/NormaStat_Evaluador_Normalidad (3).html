@@ -44,6 +44,41 @@
       background: #e4e4e7;
       border-radius: 4px;
     }
+    /* Chat IA Styles */
+    #chat-messages {
+      scroll-behavior: smooth;
+    }
+    #chat-messages::-webkit-scrollbar {
+      width: 4px;
+    }
+    .chat-bubble-user {
+      background: #2563eb;
+      color: white;
+      border-radius: 16px 16px 4px 16px;
+      max-width: 80%;
+    }
+    .dark .chat-bubble-user {
+      background: #1d4ed8;
+    }
+    .chat-bubble-model {
+      background: white;
+      color: #27272a;
+      border: 1px solid #e4e4e7;
+      border-radius: 16px 16px 16px 4px;
+      max-width: 80%;
+    }
+    .dark .chat-bubble-model {
+      background: #161B22;
+      color: #e4e4e7;
+      border-color: #30363D;
+    }
+    @keyframes chat-fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-fade-in {
+      animation: chat-fade-in 0.25s ease-out;
+    }
   </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 dark:bg-[#0F1115] dark:text-zinc-50 min-h-screen transition-colors duration-200">
@@ -71,6 +106,9 @@
           </button>
           <button id="tab-manual-btn" onclick="switchTab('manual')" class="px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition">
             Manual de Uso
+          </button>
+          <button id="tab-chat-btn" onclick="switchTab('chat')" class="px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition">
+            Chat IA
           </button>
         </div>
 
@@ -174,7 +212,7 @@
         <div class="lg:col-span-7 space-y-6">
           
           <!-- Test results cards row -->
-          <div class="grid md:grid-cols-3 gap-4" id="test-cards-container">
+          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4" id="test-cards-container">
             <!-- Cards will be dynamically injected here -->
           </div>
 
@@ -239,6 +277,61 @@
               <!-- Grid values injected dynamically -->
             </div>
           </div>
+
+          <!-- Veredicto final (4 pruebas) -->
+          <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 dark:border-[#2D333D] pb-3">
+              <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-900 dark:text-zinc-50">
+                    Criterios Fundamentales de Decisión
+                  </h3>
+                  <p class="text-[10px] text-zinc-400 dark:text-gray-500 font-medium">Veredicto final tras 4 pruebas de normalidad</p>
+                </div>
+              </div>
+              <div id="verdict-badge"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 text-xs leading-relaxed">
+              <div class="space-y-3">
+                <h4 class="font-bold text-zinc-700 dark:text-gray-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  1. Regla de Oro del p-valor (Significación)
+                </h4>
+                <p class="text-zinc-500 dark:text-gray-400 text-[11px]">
+                  Para aceptar la normalidad estadística, buscamos un p-valor mayor a <strong class="text-zinc-800 dark:text-white">0.05</strong> en al menos 3 de las 4 pruebas. Si es menor, la muestra se desvía del comportamiento de Gauss.
+                </p>
+                <div class="bg-zinc-50 dark:bg-[#0D1117] p-3 rounded-lg border border-zinc-100 dark:border-[#2D333D] space-y-1.5 font-mono text-[10px]">
+                  <div class="flex justify-between items-center">
+                    <span>Shapiro-Francia:</span>
+                    <span id="verdict-sw"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Kolmogorov-Smirnov:</span>
+                    <span id="verdict-ks"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Jarque-Bera:</span>
+                    <span id="verdict-jb"></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>Chi-cuadrado:</span>
+                    <span id="verdict-chi"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="space-y-3">
+                <h4 class="font-bold text-zinc-700 dark:text-gray-300 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  2. ¿Qué camino estadístico seguir ahora?
+                </h4>
+                <p class="text-zinc-500 dark:text-gray-400 text-[11px]">
+                  Dependiendo del veredicto final sobre la normalidad de tu muestra de datos, debes seleccionar las pruebas estadísticas correctas:
+                </p>
+                <div id="verdict-recommendation"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -246,18 +339,59 @@
 
     <!-- TAB 2: MANUAL -->
     <div id="tab-manual" class="hidden space-y-8 max-w-4xl mx-auto py-4">
-      <!-- Section copied from our Manual.tsx for complete mirroring -->
-      <div class="border-b border-zinc-200 dark:border-[#2D333D] pb-6">
-        <h2 class="text-2xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+      <!-- Introduction Header -->
+      <div class="border-b border-zinc-150 dark:border-[#2D333D] pb-6">
+        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
           Manual de Operación y Fundamentos Estadísticos
         </h2>
         <p class="text-zinc-500 dark:text-gray-400 mt-2 text-sm">
-          Guía técnica para interpretar los resultados de normalidad de forma rigurosa.
+          Guía paso a paso para utilizar la herramienta de evaluación de normalidad e interpretar los resultados científicos de forma rigurosa.
         </p>
+        <button onclick="downloadManualMarkdown()" class="mt-3 px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] hover:bg-zinc-200 dark:hover:bg-[#30363D] text-zinc-600 dark:text-gray-300 text-xs border border-zinc-200 dark:border-[#30363D] rounded-lg transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          Descargar Manual (.md)
+        </button>
       </div>
 
-      <div class="bg-blue-50/50 dark:bg-blue-950/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-6">
-        <h3 class="text-base font-bold text-blue-900 dark:text-blue-400 flex items-center gap-2 mb-3">
+      <!-- 1. Niveles de Profundidad -->
+      <section class="bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-[#161B22]/60 dark:to-[#161B22]/20 border border-zinc-200 dark:border-[#30363D] rounded-xl p-6 space-y-4">
+        <h3 class="text-base font-bold text-zinc-800 dark:text-zinc-100 flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-600 dark:text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          Niveles de Profundidad de la Herramienta
+        </h3>
+        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+          Para adaptarse a tus necesidades específicas de aprendizaje y análisis, NormaStat cuenta con dos niveles de operación seleccionables en el panel de control superior:
+        </p>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="bg-white dark:bg-[#0D1117] border border-zinc-200/80 dark:border-[#30363D]/80 p-4 rounded-xl space-y-2">
+            <span class="text-[10px] uppercase font-extrabold px-2 py-1 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200/40 dark:border-emerald-900/30 rounded-lg">
+              Principiante (Nivel Pri)
+            </span>
+            <p class="text-xs font-semibold text-zinc-800 dark:text-white pt-1">Enfoque Minimalista e Ilustrativo</p>
+            <p class="text-[11px] text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Diseñado para una visualización rápida. Oculta tecnicismos complejos para centrarse en los datos, los resultados gráficos interactivos, los <strong>Estadísticos Descriptivos</strong> de la muestra y los criterios fundamentales recomendados para tomar una decisión científica ágil.
+            </p>
+          </div>
+          <div class="bg-white dark:bg-[#0D1117] border border-zinc-200/80 dark:border-[#30363D]/80 p-4 rounded-xl space-y-2">
+            <span class="text-[10px] uppercase font-extrabold px-2 py-1 bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 border border-blue-200/40 dark:border-blue-900/30 rounded-lg">
+              Profesional (Nivel Pro)
+            </span>
+            <p class="text-xs font-semibold text-zinc-800 dark:text-white pt-1">Entorno de Aprendizaje Avanzado</p>
+            <p class="text-[11px] text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Habilita explicaciones teóricas avanzadas, tooltips de ayuda estadística detallados, acceso completo a este Manual operativo y las siguientes herramientas clave integradas:
+            </p>
+            <ul class="text-[10px] text-zinc-500 dark:text-gray-400 list-disc pl-4 space-y-1 pt-1">
+              <li><strong>Asistente Científico IA (NormaStat):</strong> Chatbot contextual para resolver dudas sobre asimetría, curtosis, tests y p-valores.</li>
+              <li><strong>Exportar CSV:</strong> Permite descargar un reporte completo con métricas descriptivas y resultados de las pruebas estadísticas de normalidad.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Regla de Oro -->
+      <section class="bg-blue-50/50 dark:bg-blue-950/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-6">
+        <h3 class="text-base font-semibold text-blue-900 dark:text-blue-400 flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-blue-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           La Regla de Oro: Interpretación del Valor de p (p-value)
         </h3>
         <p class="text-sm text-zinc-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -269,8 +403,11 @@
             <span class="text-xs font-bold px-2 py-0.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 rounded">
               Hipótesis Nula (H₀)
             </span>
-            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
+            <p class="text-sm font-medium text-zinc-800 dark:text-white mt-2">
               Los datos provienen de una población distribuida normalmente.
+            </p>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 mt-1">
+              No hay diferencia significativa entre la muestra y la teoría normal.
             </p>
           </div>
           
@@ -278,39 +415,252 @@
             <span class="text-xs font-bold px-2 py-0.5 bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 rounded">
               Hipótesis Alternativa (H₁)
             </span>
-            <p class="text-sm font-semibold text-zinc-800 dark:text-white mt-2">
+            <p class="text-sm font-medium text-zinc-800 dark:text-white mt-2">
               Los datos NO provienen de una población distribuida normalmente.
+            </p>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 mt-1">
+              Existe una desviación estadísticamente significativa de la normalidad.
             </p>
           </div>
         </div>
 
-        <div class="space-y-3 pt-2">
-          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
-            <strong>Si p &gt; 0.05:</strong> No se rechaza la hipótesis nula. El comportamiento es normal. Se pueden usar pruebas paramétricas.
-          </p>
-          <p class="text-xs leading-relaxed text-zinc-600 dark:text-gray-400">
-            <strong>Si p ≤ 0.05:</strong> Se rechaza la hipótesis nula. El comportamiento difiere de la distribución normal. Se sugiere usar estadística no paramétrica.
-          </p>
+        <div class="space-y-3 border-t border-blue-100/50 dark:border-blue-950/20 pt-4">
+          <div class="flex items-start gap-2.5">
+            <svg class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div>
+              <p class="text-sm font-semibold text-zinc-800 dark:text-white">
+                Si p &gt; 0.05 (Nivel de significación del 5%)
+              </p>
+              <p class="text-xs text-zinc-500 dark:text-gray-400">
+                <strong class="text-emerald-600 dark:text-green-400">No se rechaza H₀</strong>. Significa que tus datos tienen un comportamiento normal y puedes utilizar estadística paramétrica con seguridad (ej. pruebas t de Student, ANOVA, correlaciones de Pearson).
+              </p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-2.5">
+            <svg class="w-5 h-5 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div>
+              <p class="text-sm font-semibold text-zinc-800 dark:text-white">
+                Si p ≤ 0.05
+              </p>
+              <p class="text-xs text-zinc-500 dark:text-gray-400">
+                <strong class="text-orange-600 dark:text-orange-400">Se rechaza H₀</strong>. Significa que tus datos NO tienen un comportamiento normal y deberías considerar el uso de estadística no paramétrica (ej. U de Mann-Whitney, Wilcoxon, Kruskal-Wallis, correlaciones de Spearman) o aplicar transformaciones matemáticas (como logarítmica o raíz cuadrada).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Pruebas Estadísticas Incluidas -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-medium text-zinc-900 dark:text-white">
+          ¿Qué pruebas estadísticas contiene esta herramienta?
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
+                1. Shapiro-Francia (Aproximación de Shapiro-Wilk)
+              </h4>
+              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                Estadístico W'
+              </span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Es una de las pruebas de normalidad más potentes y recomendadas en la literatura científica. Es una versión modificada del algoritmo clásico de Shapiro-Wilk optimizada para muestras de tamaño mediano y grande (5 ≤ N ≤ 5000). Evalúa la correlación lineal entre los datos ordenados observados y las expectativas teóricas de una normal. Un valor de W' cercano a 1 indica excelente ajuste normal.
+            </p>
+          </div>
+
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
+                2. Kolmogorov-Smirnov con Estimación Paramétrica
+              </h4>
+              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                Estadístico D
+              </span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Compara de forma directa la Función de Distribución Acumulada empírica (ECDF) de tu muestra contra la función teórica de una distribución normal. El estadístico D representa la distancia máxima vertical entre ambas funciones acumuladas. Es una prueba muy clásica y conservadora para evaluar distribuciones completas.
+            </p>
+          </div>
+
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
+                3. Jarque-Bera
+              </h4>
+              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                Estadístico JB
+              </span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Esta prueba evalúa específicamente los coeficientes de <strong>Simetría (Skewness)</strong> y <strong>Curtosis</strong> de los datos. En una distribución normal pura, el sesgo es exactamente 0 y la curtosis es exactamente 3 (exceso de curtosis es 0). La prueba de Jarque-Bera evalúa si estas dos medidas conjuntas difieren estadísticamente del estándar teórico. Es idóneo para muestras grandes.
+            </p>
+          </div>
+
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-2 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center justify-between">
+              <h4 class="font-semibold text-zinc-800 dark:text-white text-sm">
+                4. Chi-cuadrado (Bondad de Ajuste)
+              </h4>
+              <span class="text-xs font-mono bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded">
+                Estadístico χ²
+              </span>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              La prueba χ² de Pearson compara las <strong>frecuencias observadas</strong> en cada intervalo de la muestra contra las <strong>frecuencias esperadas</strong> bajo una distribución normal. El estadístico χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ agrega las discrepancias entre ambas y se compara contra el valor crítico de la distribución χ² con k-3 grados de libertad (k = número de intervalos, con 2 parámetros estimados: media y desviación). Requiere al menos 8 datos. Un p-valor alto indica que las diferencias no son significativas y respalda la normalidad.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Carga de Datos -->
+      <section class="space-y-4">
+        <h3 class="text-lg font-medium text-zinc-900 dark:text-white">
+          ¿Cómo cargar tus propios datos?
+        </h3>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-3 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center gap-2 text-zinc-800 dark:text-white">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path stroke-linecap="round" stroke-linejoin="round" d="M14 2v6h6M16 13H8m8 4H8m8-8H8" /></svg>
+              <h4 class="font-semibold text-sm">Método 1: Copiar y Pegar Directo</h4>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Es el método más sencillo si tienes tus datos abiertos en <strong>Microsoft Excel, Google Sheets, SPSS</strong> o un editor de texto.
+            </p>
+            <ol class="text-xs text-zinc-500 dark:text-gray-400 space-y-1.5 list-decimal pl-4">
+              <li>Selecciona la columna numérica de tu hoja de cálculo.</li>
+              <li>Presiona <kbd class="px-1 py-0.5 bg-zinc-100 dark:bg-[#21262D] border border-zinc-200 dark:border-[#30363D] rounded text-[10px] text-zinc-800 dark:text-white">Ctrl+C</kbd> (o Cmd+C).</li>
+              <li>Pega el contenido directamente en la casilla de texto de la aplicación y presiona <strong>"Procesar Datos Copiados"</strong>.</li>
+            </ol>
+          </div>
+
+          <div class="border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 space-y-3 bg-white dark:bg-[#161B22]">
+            <div class="flex items-center gap-2 text-zinc-800 dark:text-white">
+              <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+              <h4 class="font-semibold text-sm">Método 2: Subir archivo CSV/TXT</h4>
+            </div>
+            <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed">
+              Ideal para conjuntos de datos guardados en archivos delimitados por comas o tabuladores.
+            </p>
+            <ol class="text-xs text-zinc-500 dark:text-gray-400 space-y-1.5 list-decimal pl-4">
+              <li>Arrastra o selecciona tu archivo <code>.csv</code> o <code>.txt</code>.</li>
+              <li>La herramienta detectará de forma inteligente si hay varias columnas.</li>
+              <li>Usa el selector desplegable para elegir cuál columna numérica deseas analizar en tiempo real.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Despliegue para el Docente -->
+      <section class="bg-gradient-to-r from-emerald-50 to-zinc-50 dark:from-emerald-950/10 dark:to-[#0D1117] border border-emerald-200 dark:border-emerald-900/20 rounded-xl p-6">
+        <h3 class="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+          Despliegue e Implementación para el Docente
+        </h3>
+        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed mb-4">
+          NormaStat está disponible online sin necesidad de instalación. Comparte el siguiente enlace con tus estudiantes para que accedan desde cualquier navegador:
+        </p>
+        <div class="bg-white dark:bg-[#161B22] border border-emerald-200 dark:border-emerald-900/30 rounded-lg p-4 mb-4 font-mono text-sm text-center text-emerald-700 dark:text-emerald-400 select-all">
+          https://normastat.vercel.app
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 text-xs">
+          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span class="text-zinc-600 dark:text-gray-300">Sin instalaci&oacute;n &mdash; solo un navegador</span>
+          </div>
+          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span class="text-zinc-600 dark:text-gray-300">Asistente IA funcional sin API key del estudiante</span>
+          </div>
+          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500 shrink-0"></span>
+            <span class="text-zinc-600 dark:text-gray-300">Exportaci&oacute;n HTML offline disponible</span>
+          </div>
+        </div>
+        <p class="text-[10px] text-zinc-400 dark:text-gray-500 mt-3 leading-relaxed">
+          <strong>Nota t&eacute;cnica:</strong> El chat IA utiliza la API de Gemini a trav&eacute;s de un proxy serverless en Vercel. Los estudiantes no necesitan configurar ninguna clave &mdash; la herramienta funciona directamente al abrir el enlace.
+        </p>
+      </section>
+
+      <!-- 6. Ejecución Offline -->
+      <section class="bg-zinc-50 dark:bg-[#0D1117] border border-zinc-200 dark:border-[#2D333D] rounded-xl p-6">
+        <h3 class="text-base font-semibold text-zinc-800 dark:text-white flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+          Ejecución Offline y Portabilidad Extrema (Un Solo Archivo)
+        </h3>
+        <p class="text-xs text-zinc-500 dark:text-gray-400 leading-relaxed mb-4">
+          Esta aplicación cumple con estándares de privacidad y funcionamiento libre. Si presionas el botón de <strong>"Exportar Aplicación HTML Autónoma"</strong>, se compilará un archivo HTML autocontenido de apenas unos kilobytes que incluye toda la lógica matemática, los gráficos SVG dinámicos y los estilos visuales en un solo archivo.
+        </p>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 text-xs">
+          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span class="font-mono text-zinc-600 dark:text-gray-300">100% Privado (Tus datos nunca salen de tu equipo)</span>
+          </div>
+          <div class="px-3 py-2 bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-lg flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span class="font-mono text-zinc-600 dark:text-gray-300">Funciona en tablets, smartphones y laptops sin internet</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    </div>
+
+    <!-- TAB 3: CHAT IA -->
+    <div id="tab-chat" class="hidden space-y-6 max-w-4xl mx-auto py-4">
+      <div class="border-b border-zinc-150 dark:border-[#2D333D] pb-6">
+        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-white flex items-center gap-2">
+          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+          Asistente Cient&iacute;fico IA
+        </h2>
+        <p class="text-zinc-500 dark:text-gray-400 mt-2 text-sm">
+          Consulta al asistente NormaStat sobre estad&iacute;stica, normalidad, pruebas param&eacute;tricas y no param&eacute;tricas.
+        </p>
+      </div>
+
+      <!-- Messages area -->
+      <div id="chat-messages" class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-4 h-80 overflow-y-auto space-y-4">
+        <div class="chat-bubble-model p-3 text-xs chat-fade-in">
+          <p class="font-semibold mb-1">NormaStat IA</p>
+          <p>¡Hola! Soy el asistente de NormaStat. Puedo ayudarte con:</p>
+          <ul class="list-disc pl-4 mt-1 space-y-0.5">
+            <li>Interpretación de p-valores y pruebas de normalidad</li>
+            <li>Diferencia entre pruebas paramétricas y no paramétricas</li>
+            <li>Conceptos de asimetría (skewness) y curtosis</li>
+            <li>Recomendaciones sobre qué prueba estadística usar</li>
+          </ul>
         </div>
       </div>
 
-      <div class="space-y-4">
-        <h3 class="text-lg font-bold">Pruebas estadísticas ejecutadas</h3>
-        <div class="space-y-4 text-xs text-zinc-600 dark:text-gray-400">
-          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
-            <h4 class="font-bold text-zinc-800 dark:text-white">Shapiro-Francia (Variante Shapiro-Wilk)</h4>
-            <p class="mt-1">Excelente poder estadístico para muestras de hasta 5,000 datos. Mide la correlación lineal entre datos ordenados reales y esperados de una curva de campana teórica.</p>
-          </div>
-          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
-            <h4 class="font-bold text-zinc-800 dark:text-white">Kolmogorov-Smirnov</h4>
-            <p class="mt-1">Evalúa la máxima desviación vertical entre la curva de distribución empírica acumulada (ECDF) y la curva normal acumulada esperada.</p>
-          </div>
-          <div class="border border-zinc-200 dark:border-[#30363D] bg-white dark:bg-[#161B22] rounded-lg p-4">
-            <h4 class="font-bold text-zinc-800 dark:text-white">Jarque-Bera</h4>
-            <p class="mt-1">Basado en momentos matemáticos avanzados de Asimetría (Sesgo) y Curtosis para verificar el balance y el apuntamiento de la distribución.</p>
-          </div>
-        </div>
+      <!-- Preset questions -->
+      <div class="flex flex-wrap gap-2" id="preset-questions">
+        <button onclick="sendPresetQuestion(0)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
+          ¿Qué significa p &lt; 0.05?
+        </button>
+        <button onclick="sendPresetQuestion(1)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
+          ¿Cuándo usar Shapiro-Wilk vs Kolmogorov-Smirnov?
+        </button>
+        <button onclick="sendPresetQuestion(2)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
+          ¿Qué son asimetría y curtosis?
+        </button>
+        <button onclick="sendPresetQuestion(3)" class="text-[11px] px-3 py-1.5 bg-zinc-100 dark:bg-[#21262D] text-zinc-600 dark:text-gray-300 hover:bg-zinc-200 dark:hover:bg-[#30363D] rounded-lg transition">
+          ¿Paramétrica o no paramétrica?
+        </button>
       </div>
+
+      <!-- Input area -->
+      <div class="flex gap-2" id="chat-input-area">
+        <input id="chat-input-field" type="text" placeholder="Escribe tu pregunta sobre estad&iacute;stica..." class="flex-1 px-4 py-2.5 text-sm bg-white dark:bg-[#0D1117] border border-zinc-200 dark:border-[#30363D] rounded-xl text-zinc-900 dark:text-white placeholder-zinc-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+        <button onclick="sendChatMessage()" id="chat-send-btn" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+          Enviar
+        </button>
+      </div>
+      <p id="chat-error" class="text-xs text-red-500 hidden"></p>
     </div>
 
   </main>
@@ -561,6 +911,117 @@
       };
     }
 
+    function logGamma(z) {
+      const g = 7;
+      const c = [
+        0.99999999999980993,
+        676.5203681218851,
+        -1259.1392167224028,
+        771.32342877765313,
+        -176.61502916214059,
+        12.507343278686905,
+        -0.13857109526572012,
+        9.9843695780195716e-6,
+        1.5056327351493116e-7
+      ];
+      if (z < 0.5) {
+        return Math.log(Math.PI / Math.sin(Math.PI * z)) - logGamma(1 - z);
+      }
+      z -= 1;
+      let x = c[0];
+      for (let i = 1; i < g + 2; i++) {
+        x += c[i] / (z + i);
+      }
+      const t = z + g + 0.5;
+      return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+    }
+
+    function lowerRegularizedGamma(a, x) {
+      if (x < 0 || a <= 0) return 0;
+      if (x === 0) return 0;
+      if (x < a + 1) {
+        let sum = 1 / a;
+        let term = 1 / a;
+        for (let n = 1; n < 200; n++) {
+          term *= x / (a + n);
+          sum += term;
+          if (Math.abs(term) < 1e-14) break;
+        }
+        return sum * Math.exp(-x + a * Math.log(x) - logGamma(a));
+      } else {
+        const f = 1e-30;
+        let C = f;
+        let D = 1 / (x - a + 1 + f);
+        let h = D;
+        for (let i = 2; i <= 200; i++) {
+          const n = i - 1;
+          const a_n = -n * (n - a);
+          const b_n = x + 2 * n - a;
+          D = 1 / (b_n + a_n * D + f);
+          C = b_n + a_n / C + f;
+          const delta = C * D;
+          h *= delta;
+          if (Math.abs(delta - 1) < 1e-14) break;
+        }
+        const result = Math.exp(-x + a * Math.log(x) - logGamma(a)) / h;
+        return 1 - result;
+      }
+    }
+
+    function chiSquareCDF(x, k) {
+      if (x <= 0) return 0;
+      return lowerRegularizedGamma(k / 2, x / 2);
+    }
+
+    function runChiSquareGOF(sorted, mean, sd) {
+      const n = sorted.length;
+      if (n < 8) {
+        return { value: 0, p: 1.0, pass: true, desc: "Se requieren al menos 8 datos para la prueba χ² de bondad de ajuste." };
+      }
+      if (sd === 0) return { value: 0, p: 0, pass: false, desc: "Varianza cero o datos constantes. No siguen una distribución normal." };
+
+      const min = sorted[0];
+      const max = sorted[n - 1];
+      const range = max - min;
+      if (range === 0) return { value: 0, p: 0, pass: false, desc: "Varianza cero o datos constantes. No siguen una distribución normal." };
+
+      const k = Math.max(4, Math.ceil(1 + Math.log2(n)));
+      const binWidth = range / k;
+
+      const observed = new Array(k).fill(0);
+      for (let i = 0; i < n; i++) {
+        let idx = Math.floor((sorted[i] - min) / binWidth);
+        if (idx >= k) idx = k - 1;
+        if (idx < 0) idx = 0;
+        observed[idx]++;
+      }
+
+      let chiSquare = 0;
+      for (let i = 0; i < k; i++) {
+        const lower = min + i * binWidth;
+        const upper = lower + binWidth;
+        const cdfLower = stdNormalCDF((lower - mean) / sd);
+        const cdfUpper = stdNormalCDF((upper - mean) / sd);
+        const prob = cdfUpper - cdfLower;
+        const expFreq = Math.max(prob * n, 0.01);
+        if (expFreq > 0) {
+          chiSquare += Math.pow(observed[i] - expFreq, 2) / expFreq;
+        }
+      }
+
+      const df = Math.max(1, k - 3);
+      const p = 1 - chiSquareCDF(chiSquare, df);
+
+      return {
+        value: chiSquare,
+        p: p,
+        pass: p > 0.05,
+        desc: p > 0.05
+          ? "No se rechaza la hipótesis nula (p > 0.05). Las frecuencias observadas no difieren significativamente de las esperadas bajo normalidad."
+          : "Se rechaza la hipótesis nula (p ≤ 0.05). Las frecuencias observadas difieren significativamente de lo esperado bajo una distribución normal."
+      };
+    }
+
     // Bandwidth rule of thumb for KDE
     function calculateIQR(sorted) {
       const n = sorted.length;
@@ -607,6 +1068,7 @@
       const swResult = runShapiroFrancia(sortedData);
       const ksResult = runKolmogorovSmirnov(sortedData, stats.mean, stats.sd);
       const jbResult = runJarqueBera(sortedData);
+      const chiResult = runChiSquareGOF(sortedData, stats.mean, stats.sd);
 
       // Render Normality Cards
       const cardsContainer = document.getElementById("test-cards-container");
@@ -718,6 +1180,42 @@
           </div>
           <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">${jbResult.desc}</p>
         </div>
+
+        <!-- Card 4: Chi-cuadrado -->
+        <div class="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-sm flex flex-col justify-between relative">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs font-bold text-zinc-400 font-mono">Ajuste</span>
+                <div class="relative inline-block group">
+                  <svg class="w-3.5 h-3.5 cursor-help inline-block text-zinc-400 hover:text-zinc-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
+                  </svg>
+                  <div class="absolute bottom-full mb-2 hidden group-hover:block z-50 w-64 p-3.5 bg-zinc-900 dark:bg-[#1C2128] text-zinc-100 rounded-xl shadow-xl border border-zinc-800 dark:border-[#30363D] text-[11px] font-normal right-0 translate-x-0">
+                    <div class="absolute top-full right-4 border-4 border-transparent border-t-zinc-900 dark:border-t-[#1C2128]"></div>
+                    <h5 class="font-bold text-white mb-1 text-xs">Bondad de Ajuste (Chi-cuadrado)</h5>
+                    <p class="text-zinc-300 dark:text-gray-350 leading-relaxed">La prueba χ² compara las frecuencias observadas en cada intervalo contra las frecuencias esperadas bajo una distribución normal.</p>
+                    <ul class="mt-2 pt-2 border-t border-zinc-800 dark:border-[#30363D] space-y-1 text-[10px] text-zinc-400 dark:text-gray-400 font-mono">
+                      <li>• Estadístico χ² = Σ (Oᵢ - Eᵢ)² / Eᵢ agrega las discrepancias entre frecuencias observadas y esperadas.</li>
+                      <li>• Se compara contra el valor crítico de la distribución χ² con k-3 grados de libertad.</li>
+                      <li>• Un p-valor alto indica que las diferencias no son significativas y respalda la normalidad.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded ${chiResult.pass ? 'bg-emerald-50 dark:bg-green-950/35 text-emerald-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-950/25 text-orange-600 dark:text-orange-400' }">${chiResult.pass ? 'Distribución Normal' : 'No Normal'}</span>
+            </div>
+            <h4 class="text-xs font-bold text-zinc-900 dark:text-white mt-2">Chi-cuadrado (χ²)</h4>
+            <div class="mt-3 flex items-baseline gap-2">
+              <span class="text-2xl font-black font-mono tracking-tight text-zinc-900 dark:text-white">${chiResult.value.toFixed(4)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="text-[10px] text-zinc-400 font-mono">Valor de p:</span>
+              <span class="text-xs font-mono font-bold ${chiResult.pass ? 'text-emerald-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'}" id="chi-p-value">${chiResult.p < 0.0001 ? '< 0.0001' : chiResult.p.toFixed(4)}</span>
+            </div>
+          </div>
+          <p class="text-[10px] text-zinc-500 dark:text-gray-400 mt-4 leading-relaxed border-t border-zinc-100 dark:border-[#30363D] pt-3">${chiResult.desc}</p>
+        </div>
       `;
 
       // Render Descriptive Stats Grid
@@ -756,6 +1254,39 @@
           <span class="block text-base font-black font-mono mt-1 text-zinc-800 dark:text-white">${stats.excessKurtosis.toFixed(3)}</span>
         </div>
       `;
+
+      // Render Veredicto Final (4 pruebas)
+      const passedCount = [swResult.pass, ksResult.pass, jbResult.pass, chiResult.pass].filter(Boolean).length;
+      const verdictBadge = document.getElementById("verdict-badge");
+      if (passedCount >= 3) {
+        verdictBadge.innerHTML = `<span class="px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-green-400 border border-emerald-200/40 dark:border-emerald-900/30">✓ SUPUESTO CUMPLIDO (Normalidad Aceptada)</span>`;
+      } else {
+        verdictBadge.innerHTML = `<span class="px-3 py-1 text-xs font-bold rounded-full bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 border border-amber-200/40 dark:border-amber-900/30">✗ DESVIACIÓN DETECTADA (No Normal)</span>`;
+      }
+      const verdictRows = [
+        { id: "verdict-sw", result: swResult },
+        { id: "verdict-ks", result: ksResult },
+        { id: "verdict-jb", result: jbResult },
+        { id: "verdict-chi", result: chiResult }
+      ];
+      verdictRows.forEach(row => {
+        const el = document.getElementById(row.id);
+        const pass = row.result.pass;
+        const pText = row.result.p < 0.0001 ? '< 0.0001' : row.result.p.toFixed(4);
+        el.innerHTML = `<span class="${pass ? 'text-emerald-600 dark:text-green-400 font-bold' : 'text-amber-600 dark:text-amber-400 font-bold'}">p = ${pText} (${pass ? '✓ Normal' : '✗ No Normal'})</span>`;
+      });
+      const recommendation = document.getElementById("verdict-recommendation");
+      if (passedCount >= 3) {
+        recommendation.innerHTML = `<div class="bg-emerald-50/40 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-900/30 p-3 rounded-lg text-[11px] text-emerald-800 dark:text-emerald-350 space-y-1">
+          <span class="font-bold block">✓ Recomendación: Pruebas Paramétricas</span>
+          <span>Tus datos son aptos para aplicar pruebas de alto rendimiento como: <strong>T de Student, ANOVA de un factor, Coeficiente de Pearson</strong> o regresiones lineales clásicas.</span>
+        </div>`;
+      } else {
+        recommendation.innerHTML = `<div class="bg-amber-50/40 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/30 p-3 rounded-lg text-[11px] text-amber-800 dark:text-amber-350 space-y-1">
+          <span class="font-bold block">⚠ Recomendación: Pruebas No Paramétricas</span>
+          <span>Se recomienda aplicar alternativas que no asumen normalidad como: <strong>U de Mann-Whitney, Wilcoxon, Kruskal-Wallis o Correlación de Spearman</strong>. También puedes aplicar transformaciones matemáticas (e.g. logaritmo natural).</span>
+        </div>`;
+      }
 
       // Render Dynamic SVG Chart
       renderSVGChart(stats);
@@ -909,20 +1440,20 @@
     function switchTab(tabId) {
       const tabAnalisis = document.getElementById("tab-analisis");
       const tabManual = document.getElementById("tab-manual");
+      const tabChat = document.getElementById("tab-chat");
       const tabAnalisisBtn = document.getElementById("tab-analisis-btn");
       const tabManualBtn = document.getElementById("tab-manual-btn");
+      const tabChatBtn = document.getElementById("tab-chat-btn");
 
-      if (tabId === 'analisis') {
-        tabAnalisis.classList.remove("hidden");
-        tabManual.classList.add("hidden");
-        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
-        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
-      } else {
-        tabAnalisis.classList.add("hidden");
-        tabManual.classList.remove("hidden");
-        tabManualBtn.className = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
-        tabAnalisisBtn.className = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
-      }
+      const activeClass = "px-3.5 py-1.5 rounded-md font-semibold bg-white dark:bg-[#30363D] text-zinc-900 dark:text-white shadow-sm transition cursor-pointer";
+      const inactiveClass = "px-3.5 py-1.5 rounded-md font-semibold text-zinc-500 dark:text-gray-400 hover:text-zinc-900 dark:hover:text-white transition cursor-pointer";
+
+      tabAnalisis.classList.toggle("hidden", tabId !== 'analisis');
+      tabManual.classList.toggle("hidden", tabId !== 'manual');
+      tabChat.classList.toggle("hidden", tabId !== 'chat');
+      tabAnalisisBtn.className = tabId === 'analisis' ? activeClass : inactiveClass;
+      tabManualBtn.className = tabId === 'manual' ? activeClass : inactiveClass;
+      tabChatBtn.className = tabId === 'chat' ? activeClass : inactiveClass;
     }
 
     function toggleDarkMode() {
@@ -1083,9 +1614,101 @@
       reader.readAsText(file);
     }
 
+    // --- CHAT IA FUNCTIONS ---
+    const CHAT_API_URL = "https://normastat.vercel.app/api/chat";
+
+    const PRESET_QUESTIONS = [
+      "¿Qué significa p < 0.05 en una prueba de normalidad? Explica como si tuviera 15 años.",
+      "¿Cuándo debo usar Shapiro-Wilk en lugar de Kolmogorov-Smirnov para evaluar normalidad?",
+      "Explica qué son la asimetría (skewness) y la curtosis en una distribución de datos.",
+      "¿Cuál es la diferencia entre pruebas paramétricas y no paramétricas? ¿Cuándo usar cada una?"
+    ];
+
+    let chatHistory = [];
+
+    function addChatMessage(role, text) {
+      const container = document.getElementById("chat-messages");
+      const div = document.createElement("div");
+      div.className = (role === "user" ? "chat-bubble-user ml-auto" : "chat-bubble-model") + " p-3 text-xs chat-fade-in";
+      if (role === "user") {
+        div.textContent = text;
+      } else {
+        div.innerHTML = '<p class="font-semibold mb-1">NormaStat IA</p>' + text.replace(/\n/g, "<br>");
+      }
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showChatError(msg) {
+      const err = document.getElementById("chat-error");
+      err.textContent = msg;
+      err.classList.remove("hidden");
+    }
+
+    function hideChatError() {
+      document.getElementById("chat-error").classList.add("hidden");
+    }
+
+    function setChatLoading(loading) {
+      const btn = document.getElementById("chat-send-btn");
+      const input = document.getElementById("chat-input-field");
+      btn.disabled = loading;
+      btn.innerHTML = loading
+        ? '<span class="inline-block animate-pulse">Pensando...</span>'
+        : '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg> Enviar';
+      input.disabled = loading;
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById("chat-input-field");
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      hideChatError();
+      addChatMessage("user", text);
+      setChatLoading(true);
+
+      chatHistory.push({ role: "user", parts: [{ text: text }] });
+
+      try {
+        const res = await fetch(CHAT_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: chatHistory })
+        });
+        const data = await res.json();
+
+        if (data.error) {
+          showChatError("Error: " + data.error + ".");
+          chatHistory.pop();
+        } else {
+          const reply = data.text || "No se obtuvo respuesta.";
+          addChatMessage("model", reply);
+          chatHistory.push({ role: "model", parts: [{ text: reply }] });
+        }
+      } catch (err) {
+        showChatError("Error de conexión: " + err.message + ". Verifica tu conexión a internet.");
+        chatHistory.pop();
+      }
+
+      setChatLoading(false);
+    }
+
+    function sendPresetQuestion(index) {
+      const input = document.getElementById("chat-input-field");
+      input.value = PRESET_QUESTIONS[index];
+      sendChatMessage();
+    }
+
     // --- INITIALIZE APP ---
     window.onload = function() {
       renderApp();
+      document.getElementById("chat-input-field").addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      });
     };
   </script>
 
